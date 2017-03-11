@@ -1,0 +1,1 @@
+To run this project, open index.html in your preferred web browser (Chrome, Firefox, Safari, or Edge).
