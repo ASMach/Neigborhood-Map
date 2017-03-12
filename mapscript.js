@@ -87,6 +87,20 @@ function initMap() {
                               mapTypeControl: false
                               });
     
+    // This autocomplete is for use in the search within time entry box.
+    var timeAutocomplete = new google.maps.places.Autocomplete(
+                                                               document.getElementById('search-within-time-text'));
+    // This autocomplete is for use in the geocoder entry box.
+    var zoomAutocomplete = new google.maps.places.Autocomplete(
+                                                               document.getElementById('zoom-to-area-text'));
+    // Bias the boundaries within the map for the zoom to area text.
+    zoomAutocomplete.bindTo('bounds', map);
+    // Create a searchbox in order to execute a places search
+    var searchBox = new google.maps.places.SearchBox(
+                                                     document.getElementById('places-search'));
+    // Bias the searchbox to within the bounds of the map.
+    searchBox.setBounds(map.getBounds());
+    
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.
     var locations = [
@@ -111,9 +125,6 @@ function initMap() {
                                                                                ]
                                                                 }
                                                                 });
-    
-    // Style the markers a bit. This will be our listing marker icon.
-    var defaultIcon = makeMarkerIcon('0091ff');
     
     // Style the markers a bit. This will be our listing marker icon.
     var defaultIcon = makeMarkerIcon('0091ff');
@@ -149,61 +160,56 @@ function initMap() {
         marker.addListener('mouseout', function() {
                            this.setIcon(defaultIcon);
                            });
-        document.getElementById('toggle-drawing').addEventListener('click', function() {
-                                                                   toggleDrawing(drawingManager);
-                                                                   });
-        
-        document.getElementById('zoom-to-area').addEventListener('click', function() {
-                                                                 zoomToArea();
-                                                                 });
-        
-        document.getElementById('search-within-time').addEventListener('click', function() {
-                                                                       searchWithinTime();
-                                                                       });
-        
-        // Listen for the event fired when the user selects a prediction from the
-        // picklist and retrieve more details for that place.
-        searchBox.addListener('places_changed', function() {
-                              searchBoxPlaces(this);
-                              });
-        
-        // Listen for the event fired when the user selects a prediction and clicks
-        // "go" more details for that place.
-        document.getElementById('go-places').addEventListener('click', textSearchPlaces);
-        
-        // Add an event listener so that the polygon is captured,  call the
-        // searchWithinPolygon function. This will show the markers in the polygon,
-        // and hide any outside of it.
-        drawingManager.addListener('overlaycomplete', function(event) {
-                                   // First, check if there is an existing polygon.
-                                   // If there is, get rid of it and remove the markers
-                                   if (polygon) {
-                                   polygon.setMap(null);
-                                   hideMarkers(markers);
-                                   }
-                                   // Switching the drawing mode to the HAND (i.e., no longer drawing).
-                                   drawingManager.setDrawingMode(null);
-                                   // Creating a new editable polygon from the overlay.
-                                   polygon = event.overlay;
-                                   polygon.setEditable(true);
-                                   // Searching within the polygon.
-                                   searchWithinPolygon(polygon);
-                                   // Make sure the search is re-done if the poly is changed.
-                                   polygon.getPath().addListener('set_at', searchWithinPolygon);
-                                   polygon.getPath().addListener('insert_at', searchWithinPolygon);
-                                   });
-
     }
-    
-    // Geocoder allows us to search by address
-    var geocoder = new google.maps.Geocoder();
-    document.getElementById('submit').addEventListener('click', function() {
-                                                       geocodeAddress(geocoder, map);
-                                                       });
-    
     document.getElementById('show-listings').addEventListener('click', showListings);
-    document.getElementById('hide-listings').addEventListener('click', hideListings);
     
+    document.getElementById('hide-listings').addEventListener('click', function() {
+                                                              hideMarkers(markers);
+                                                              });
+    
+    document.getElementById('toggle-drawing').addEventListener('click', function() {
+                                                               toggleDrawing(drawingManager);
+                                                               });
+    
+    document.getElementById('zoom-to-area').addEventListener('click', function() {
+                                                             zoomToArea();
+                                                             });
+    
+    document.getElementById('search-within-time').addEventListener('click', function() {
+                                                                   searchWithinTime();
+                                                                   });
+    
+    // Listen for the event fired when the user selects a prediction from the
+    // picklist and retrieve more details for that place.
+    searchBox.addListener('places_changed', function() {
+                          searchBoxPlaces(this);
+                          });
+    
+    // Listen for the event fired when the user selects a prediction and clicks
+    // "go" more details for that place.
+    document.getElementById('go-places').addEventListener('click', textSearchPlaces);
+    
+    // Add an event listener so that the polygon is captured,  call the
+    // searchWithinPolygon function. This will show the markers in the polygon,
+    // and hide any outside of it.
+    drawingManager.addListener('overlaycomplete', function(event) {
+                               // First, check if there is an existing polygon.
+                               // If there is, get rid of it and remove the markers
+                               if (polygon) {
+                               polygon.setMap(null);
+                               hideMarkers(markers);
+                               }
+                               // Switching the drawing mode to the HAND (i.e., no longer drawing).
+                               drawingManager.setDrawingMode(null);
+                               // Creating a new editable polygon from the overlay.
+                               polygon = event.overlay;
+                               polygon.setEditable(true);
+                               // Searching within the polygon.
+                               searchWithinPolygon(polygon);
+                               // Make sure the search is re-done if the poly is changed.
+                               polygon.getPath().addListener('set_at', searchWithinPolygon);
+                               polygon.getPath().addListener('insert_at', searchWithinPolygon);
+                               });
 }
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
