@@ -35,8 +35,8 @@ function initMap() {
                   featureType: 'road.highway',
                   elementType: 'geometry.stroke',
                   stylers: [
-                            { color: '#9c9c9c' },
-                            { lightness: -25 }
+                            { color: '#efe9e4' },
+                            { lightness: -40 }
                             ]
                   },{
                   featureType: 'transit.station',
@@ -46,27 +46,15 @@ function initMap() {
                             ]
                   },{
                   featureType: 'road.highway',
-                  stylers: [
-                            { hue: -31 },
-                            { saturation: -40 },
-                            { lightness: 2.8 },
-                            { visibility: 'on' }
-                            ]
-                  },{
-                  featureType: 'road.highway',
                   elementType: 'labels.icon',
                   stylers: [
-                            { hue: -31 },
-                            { saturation: -40 },
-                            { lightness: 2.8 },
-                            { visibility: 'on' }
+                            { visibility: 'off' }
                             ]
                   },{
                   featureType: 'water',
                   elementType: 'labels.text.stroke',
                   stylers: [
-                            { lightness: 100 },
-                            { color: '#9c9cff' }
+                            { lightness: 100 }
                             ]
                   },{
                   featureType: 'water',
@@ -83,10 +71,19 @@ function initMap() {
                             ]
                   },{
                   featureType: 'road.highway',
+                  elementType: 'labels.icon',
+                  stylers: [
+                            { hue: -31 },
+                            { saturation: -40 },
+                            { lightness: 2.8 },
+                            { visibility: 'on' }
+                            ]
+                  },{
+                  featureType: 'road.highway',
                   elementType: 'geometry.fill',
                   stylers: [
                             { color: '#ef3131' },
-                            { lightness: 25 }
+                            { lightness: -25 }
                             ]
                   }
                   ];
@@ -615,14 +612,6 @@ function showListings() {
 function hideListings() {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
-    }
-}
-
-// Get all markers and show them in a view
-function markerList() {
-    for (var i = 0; i < markers.length; i++) {
-        // TODO: Add markers to a view and display it
-        //markers[i]
     }
 }
 
