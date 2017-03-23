@@ -29,32 +29,44 @@ function initMap() {
                   featureType: 'administrative',
                   elementType: 'labels.text.fill',
                   stylers: [
-                            { color: '#e85113' }
+                            { color: '#ef3131' }
                             ]
                   },{
                   featureType: 'road.highway',
                   elementType: 'geometry.stroke',
                   stylers: [
-                            { color: '#efe9e4' },
-                            { lightness: -40 }
+                            { color: '#9c9c9c' },
+                            { lightness: -25 }
                             ]
                   },{
                   featureType: 'transit.station',
                   stylers: [
                             { weight: 9 },
-                            { hue: '#e85113' }
+                            { hue: '#019a93' }
+                            ]
+                  },{
+                  featureType: 'road.highway',
+                  stylers: [
+                            { hue: -31 },
+                            { saturation: -40 },
+                            { lightness: 2.8 },
+                            { visibility: 'on' }
                             ]
                   },{
                   featureType: 'road.highway',
                   elementType: 'labels.icon',
                   stylers: [
-                            { visibility: 'off' }
+                            { hue: -31 },
+                            { saturation: -40 },
+                            { lightness: 2.8 },
+                            { visibility: 'on' }
                             ]
                   },{
                   featureType: 'water',
                   elementType: 'labels.text.stroke',
                   stylers: [
-                            { lightness: 100 }
+                            { lightness: 100 },
+                            { color: '#9c9cff' }
                             ]
                   },{
                   featureType: 'water',
@@ -73,18 +85,18 @@ function initMap() {
                   featureType: 'road.highway',
                   elementType: 'geometry.fill',
                   stylers: [
-                            { color: '#efe9e4' },
-                            { lightness: -25 }
+                            { color: '#ef3131' },
+                            { lightness: 25 }
                             ]
                   }
                   ];
     
-    // Constructor creates a new map - only center and zoom are required.
+    // Constructor creates a new map centered on Cupertino, CA.
     map = new google.maps.Map(document.getElementById('map'), {
                               center: {lat: 37.3230, lng: -122.0322},
                               zoom: 13,
                               styles: styles,
-                              mapTypeControl: false
+                              mapTypeControl: true
                               });
     
     // This autocomplete is for use in the search within time entry box.
@@ -103,13 +115,14 @@ function initMap() {
     
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.
+    
+    // TODO: Move these locations into an external MySQL database
     var locations = [
-                     {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
-                     {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},
-                     {title: 'Union Square Open Floor Plan', location: {lat: 40.7347062, lng: -73.9895759}},
-                     {title: 'East Village Hip Studio', location: {lat: 40.7281777, lng: -73.984377}},
-                     {title: 'TriBeCa Artsy Bachelor Pad', location: {lat: 40.7195264, lng: -74.0089934}},
-                     {title: 'Chinatown Homey Space', location: {lat: 40.7180628, lng: -73.9961237}}
+                     {title: '6045 Shadygrove Drive', location: {lat: 37.314316, lng: -122.008423}},
+                     {title: '10798 Stokes Avenue', location: {lat: 37.33107589999999, lng: -122.05861119999997}},
+                     {title: '22293 McClellan Road', location: {lat: 37.314686, lng: -122.06510760000003}},
+                     {title: '21491 Columbus Ave', location: {lat: 37.308121, lng: -122.05015400000002}},
+                     {title: '10686 Johansen Drive', location: {lat: 37.3129266, lng: -122.0066923}}
                      ];
     
     var largeInfowindow = new google.maps.InfoWindow();
@@ -119,7 +132,7 @@ function initMap() {
                                                                 drawingMode: google.maps.drawing.OverlayType.POLYGON,
                                                                 drawingControl: true,
                                                                 drawingControlOptions: {
-                                                                position: google.maps.ControlPosition.TOP_LEFT,
+                                                                position: google.maps.ControlPosition.TOP_RIGHT,
                                                                 drawingModes: [
                                                                                google.maps.drawing.OverlayType.POLYGON
                                                                                ]
@@ -602,6 +615,14 @@ function showListings() {
 function hideListings() {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
+    }
+}
+
+// Get all markers and show them in a view
+function markerList() {
+    for (var i = 0; i < markers.length; i++) {
+        // TODO: Add markers to a view and display it
+        //markers[i]
     }
 }
 
