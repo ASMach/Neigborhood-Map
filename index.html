@@ -42,14 +42,28 @@
                 <input id="search-within-time-text" type="text" placeholder="Ex: 1 Infinite Loop, Cupertino, CA">
                 <input id="search-within-time" type="button" value="Go">
             </div>
-            <hr>
             <!--
+            <hr>
             <div>
                 <span class="text">Search for nearby places</span>
                 <input id="places-search" type="text" placeholder="Ex: Pizza delivery in NYC">
                 <input id="go-places" type="button" value="Go">
             </div>
             -->
+            <hr>
+            <div>
+                <table>
+                    <thead><tr>
+                        <th>Address</th>
+                    </tr></thead>
+                    <tbody data-bind="foreach: markers">
+                        <tr>
+                            <td><span data-bind="text: title" /></td>
+                            <!--<td><a href="#" data-bind="click: $root.removeSeat">Remove</a></td>-->
+                        </tr>    
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div id="map"></div>
     </div>
