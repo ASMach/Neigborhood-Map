@@ -12,11 +12,44 @@ var polygon = null;
 var placeMarkers = [];
 */
 
+// Add map to Knockout
+
+ko.bindingHandlers.map = {
+    
+init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+    var mapObj = ko.utils.unwrapObservable(valueAccessor());
+    var latLng = new google.maps.LatLng(
+                                        ko.utils.unwrapObservable(mapObj.lat),
+                                        ko.utils.unwrapObservable(mapObj.lng));
+    var mapOptions = { center: latLng,
+    zoom: 5,
+        mapTypeId: google.maps.MapTypeId.ROADMAP};
+    
+    mapObj.googleMap = new google.maps.Map(element, mapOptions);
+    /*
+     mapObj.googleMap = map = new google.maps.Map(document.getElementById('map'), {
+                                                 center: {lat: 37.3230, lng: -122.0322},
+                                                 zoom: 13,
+                                                 styles: styles,
+                                                 mapTypeControl: true
+                                                 });
+     */
+    
+    $("#" + element.getAttribute("id")).data("mapObj",mapObj);
+}
+};
+
 // Knockout data model for our map system
 function MapDataModel(title)
 {
     // Get reference to self first
     var self = this;
+    
+    // Setup initial map
+    self.mapObj = ko.observable({
+                               lat: ko.observable(37.3230),
+                               lng: ko.observable(-122.0322)
+                               });
     
     // This global polygon variable is to ensure only ONE polygon is rendered.
     var polygon = null;

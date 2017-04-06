@@ -65,7 +65,12 @@
                 </table>
             </div>
         </div>
-        <div id="map"></div>
+        <!--OLD STYLE MAP DISPLAY-->
+        <!--<div id="map"></div>-->
+        <!--NEW STYLE MAP DISPLAY-->
+        <div id="mapDiv" data-bind="style:{width:'300px',height:'100%'},map:mapObj"></div>
+        <input data-bind="value: mapObj().lat" />
+        <input data-bind="value: mapObj().lng" />
     </div>
     <script src="scripts/mapscript.js"></script>
     <script async defer
