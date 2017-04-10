@@ -1,6 +1,5 @@
 var map;
 
-/*
 // Create a new blank array for all the listing markers.
 var markers = [];
 
@@ -10,7 +9,6 @@ var polygon = null;
 // Create placemarkers array to use in multiple functions to have control
 // over the number of places that show.
 var placeMarkers = [];
-*/
 
 // Add map to Knockout
 
@@ -141,6 +139,7 @@ function MapDataModel(title)
         return markerImage;
     }
     
+    /*
     // This shows and hides (respectively) the drawing options.
     function toggleDrawing(drawingManager) {
         if (drawingManager.map) {
@@ -166,7 +165,9 @@ function MapDataModel(title)
             }
         }
     }
+    */
     
+    /*
     // This geocodes an address
     function geocodeAddress(geocoder, resultsMap) {
         var address = document.getElementById('address').value;
@@ -181,7 +182,9 @@ function MapDataModel(title)
                          }
                          });
     }
+    */
     
+    /*
     // This function takes the input value in the find nearby area text input
     // locates it, and then zooms into that area. This is so that the user can
     // show all listings, then decide to focus on one area of the map.
@@ -210,6 +213,7 @@ function MapDataModel(title)
                              });
         }
     }
+    */
     
     // This function allows the user to input a desired travel time, in
     // minutes, and a travel mode, and a location - and only show the listings
@@ -345,6 +349,7 @@ function MapDataModel(title)
         }
     }
     
+    /*s
     // This function firest when the user select "go" on the places search.
     // It will do a nearby search using the entered query string or place.
     function textSearchPlaces() {
@@ -360,6 +365,7 @@ function MapDataModel(title)
                                  }
                                  });
     }
+    */
     
     // This function creates markers for each place found in either places search.
     function createMarkersForPlaces(places) {
@@ -573,13 +579,11 @@ function initMap() {
                               });
     
     // This autocomplete is for use in the search within time entry box.
-    var timeAutocomplete = new google.maps.places.Autocomplete(
-                                                               document.getElementById('search-within-time-text'));
+    var timeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-within-time-text'));
     // This autocomplete is for use in the geocoder entry box.
-    var zoomAutocomplete = new google.maps.places.Autocomplete(
-                                                               document.getElementById('zoom-to-area-text'));
+    //var zoomAutocomplete = new google.maps.places.Autocomplete(document.getElementById('zoom-to-area-text'));
     // Bias the boundaries within the map for the zoom to area text.
-    zoomAutocomplete.bindTo('bounds', map);
+    //zoomAutocomplete.bindTo('bounds', map);
     // Create a searchbox in order to execute a places search
     var searchBox = new google.maps.places.SearchBox(
                                                      document.getElementById('places-search'));
@@ -657,9 +661,11 @@ function initMap() {
                                                                toggleDrawing(drawingManager);
                                                                });
     
+    /*
     document.getElementById('zoom-to-area').addEventListener('click', function() {
                                                              zoomToArea();
                                                              });
+     */
     
     document.getElementById('search-within-time').addEventListener('click', function() {
                                                                    searchWithinTime();
@@ -673,7 +679,7 @@ function initMap() {
     
     // Listen for the event fired when the user selects a prediction and clicks
     // "go" more details for that place.
-    document.getElementById('go-places').addEventListener('click', textSearchPlaces);
+    //document.getElementById('go-places').addEventListener('click', textSearchPlaces);
     
     // Add an event listener so that the polygon is captured,  call the
     // searchWithinPolygon function. This will show the markers in the polygon,
@@ -698,7 +704,6 @@ function initMap() {
                                });
 }
 
-/*
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
@@ -792,6 +797,7 @@ function searchWithinPolygon() {
     }
 }
 
+/*
 // This geocodes an address
 function geocodeAddress(geocoder, resultsMap) {
     var address = document.getElementById('address').value;
@@ -806,7 +812,9 @@ function geocodeAddress(geocoder, resultsMap) {
                      }
                      });
 }
+*/
 
+/*
 // This function takes the input value in the find nearby area text input
 // locates it, and then zooms into that area. This is so that the user can
 // show all listings, then decide to focus on one area of the map.
@@ -835,6 +843,7 @@ function zoomToArea() {
                          });
     }
 }
+ */
 
 // This function allows the user to input a desired travel time, in
 // minutes, and a travel mode, and a location - and only show the listings
@@ -970,6 +979,7 @@ function searchBoxPlaces(searchBox) {
     }
 }
 
+/*
 // This function firest when the user select "go" on the places search.
 // It will do a nearby search using the entered query string or place.
 function textSearchPlaces() {
@@ -985,6 +995,7 @@ function textSearchPlaces() {
                              }
                              });
 }
+ */
 
 // This function creates markers for each place found in either places search.
 function createMarkersForPlaces(places) {
@@ -1105,4 +1116,3 @@ function makeMarkerIcon(markerColor) {
                                                   new google.maps.Size(21,34));
     return markerImage;
 }
-*/
