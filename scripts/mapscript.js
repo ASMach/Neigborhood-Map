@@ -1,14 +1,7 @@
 var map;
 
-// Create a new blank array for all the listing markers.
-//var markers = [];
-
 // This global polygon variable is to ensure only ONE polygon is rendered.
 var polygon = null;
-
-// Create placemarkers array to use in multiple functions to have control
-// over the number of places that show.
-var placeMarkers = [];
 
 // TODO: Move these locations into an external MySQL database
 var locations = [
@@ -418,7 +411,7 @@ function MapDataModel(title)
     // This function fires when the user selects a searchbox picklist item.
     // It will do a nearby search using the selected query string or place.
     function searchBoxPlaces(searchBox) {
-        hideMarkers(placeMarkers);
+        hideMarkers(self.placeMarkers);
         var places = searchBox.getPlaces();
         if (places.length == 0) {
             window.alert('We did not find any places matching that search!');
@@ -433,7 +426,7 @@ function MapDataModel(title)
     // It will do a nearby search using the entered query string or place.
     function textSearchPlaces() {
         var bounds = map.getBounds();
-        hideMarkers(placeMarkers);
+        hideMarkers(self.placeMarkers);
         var placesService = new google.maps.places.PlacesService(map);
         placesService.textSearch({
                                  query: document.getElementById('places-search').value,
