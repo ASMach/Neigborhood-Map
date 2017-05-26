@@ -16,13 +16,6 @@
                 <span class="text"> Draw a custom search area boundary!</span>
                 <input id="toggle-drawing"  type="button" value="Drawing Tools">
             </div>
-            <!--
-            <hr>
-            <div>
-                <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
-                <input id="zoom-to-area" type="button" value="Zoom">
-            </div>
-            -->
             <hr>
             <div>
                 <span class="text"> Within </span>
@@ -42,14 +35,6 @@
                 <input id="search-within-time-text" type="text" placeholder="Ex: 1 Infinite Loop, Cupertino, CA">
                 <input id="search-within-time" type="button" value="Go">
             </div>
-            <!--
-            <hr>
-            <div>
-                <span class="text">Search for nearby places</span>
-                <input id="places-search" type="text" placeholder="Ex: Pizza delivery in NYC">
-                <input id="go-places" type="button" value="Go">
-            </div>
-            -->
             <hr>
             <div>
                 <table>
@@ -59,18 +44,21 @@
                     <tbody data-bind="foreach: markers">
                         <tr>
                             <td><span data-bind="text: title" /></td>
-                            <!--<td><a href="#" data-bind="click: $root.removeSeat">Remove</a></td>-->
+                            <td><a href="#" data-bind="click: $root.removeSeat">Remove</a></td>
                         </tr>    
                     </tbody>
                 </table>
             </div>
+            <div>
+                <span class="text"> Enter custom coordinates!</span>
+            </div>
+            <div>
+                <input data-bind="value: mapObj().lat" />
+                <input data-bind="value: mapObj().lng" />
+            </div>
         </div>
-        <!--OLD STYLE MAP DISPLAY-->
-        <!--<div id="map"></div>-->
         <!--NEW STYLE MAP DISPLAY-->
-        <div id="mapDiv" data-bind="style:{width:'100%',height:'100%'},map:mapObj"></div>
-        <input data-bind="value: mapObj().lat" />
-        <input data-bind="value: mapObj().lng" />
+        <div id="map" data-bind="style:{width:'100%',height:'100%'},map:mapObj"></div>
     </div>
     <script src="scripts/mapscript.js"></script>
     <script async defer
