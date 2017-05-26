@@ -6,16 +6,16 @@
     </head>
     <body>
         <script type='text/javascript' src='scripts/knockout-3.4.2.js'></script>
-    <div class="container-fluid">
-        <div class="options-box">
-            <h1>Find Your New Cupertino Home</h1>
-            <div>
-                <button id="show-listings" data-bind="click: showListings">Show Listings</button>
-                <button id="hide-listings" data-bind="click: hideMarkers">Hide Listings</button>
-                <hr>
-                <span class="text"> Draw a custom search area boundary!</span>
-                <button id="toggle-drawing" data-bind="click: toggleDrawing">Drawing Tools</button>
-            </div>
+        <div class="container-fluid">
+            <div class="options-box">
+                <h1>Find Your New Cupertino Home</h1>
+                <div>
+                    <button id="show-listings" data-bind="click: showListings">Show Listings</button>
+                    <button id="hide-listings" data-bind="click: hideMarkers">Hide Listings</button>
+                    <hr>
+                    <span class="text"> Draw a custom search area boundary!</span>
+                    <button id="toggle-drawing" data-bind="click: toggleDrawing">Drawing Tools</button>
+                </div>
             <hr>
             <div>
                 <span class="text"> Within </span>
@@ -57,11 +57,10 @@
                 <input data-bind="value: mapObj().lng" />
             </div>
         </div>
-        <!--NEW STYLE MAP DISPLAY-->
         <div id="map" data-bind="style:{width:'100%',height:'100%'},map:mapObj"></div>
-    </div>
-    <script src="scripts/mapscript.js"></script>
-    <script async defer
+        </div>
+        <script src="scripts/mapscript.js"></script>
+        <script async defer
         src=
         "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAAYsARjJKdWD4t-Wxm-DMI0E9pWpBCoxI&v=3&callback=initMap">
         </script>
