@@ -1,7 +1,7 @@
 var map;
 
 // Create a new blank array for all the listing markers.
-var markers = [];
+//var markers = [];
 
 // This global polygon variable is to ensure only ONE polygon is rendered.
 var polygon = null;
@@ -121,9 +121,6 @@ init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
 // Knockout data model for our map system
 function MapDataModel(title)
 {
-    // Create a new blank array for all the listing markers.
-    var markers = [];
-    
     // Get reference to self first
     var self = this;
     
@@ -241,11 +238,11 @@ function MapDataModel(title)
     // and shows only the ones within it. This is so that the
     // user can specify an exact area of search.
     function searchWithinPolygon() {
-        for (var i = 0; i < markers.length; i++) {
-            if (google.maps.geometry.poly.containsLocation(markers[i].position, polygon)) {
-                markers[i].setMap(map);
+        for (var i = 0; i < self.markers.length; i++) {
+            if (google.maps.geometry.poly.containsLocation(self.markers[i].position, polygon)) {
+                self.markers[i].setMap(map);
             } else {
-                markers[i].setMap(null);
+                self.markers[i].setMap(null);
             }
         }
     }
@@ -308,13 +305,13 @@ function MapDataModel(title)
         if (address == '') {
             window.alert('You must enter an address.');
         } else {
-            hideMarkers(markers);
+            hideMarkers(self.markers);
             // Use the distance matrix service to calculate the duration of the
             // routes between all our markers, and the destination address entered
             // by the user. Then put all the origins into an origin matrix.
             var origins = [];
-            for (var i = 0; i < markers.length; i++) {
-                origins[i] = markers[i].position;
+            for (var i = 0; i < self.markers.length; i++) {
+                origins[i] = self.markers[i].position;
             }
             var destination = address;
             var mode = document.getElementById('mode').value;
@@ -360,7 +357,7 @@ function MapDataModel(title)
                     var durationText = element.duration.text;
                     if (duration <= maxDuration) {
                         //the origin [i] should = the markers[i]
-                        markers[i].setMap(map);
+                        self.markers[i].setMap(map);
                         atLeastOne = true;
                         // Create a mini infowindow to open immediately and contain the
                         // distance and duration
@@ -369,11 +366,11 @@ function MapDataModel(title)
                                                                     '<div><input type=\"button\" value=\"View Route\" onclick =' +
                                                                     '\"displayDirections(&quot;' + origins[i] + '&quot;);\"></input></div>'
                                                                     });
-                        infowindow.open(map, markers[i]);
+                        infowindow.open(map, self.markers[i]);
                         // Put this in so that this small window closes if the user clicks
                         // the marker, when the big infowindow opens
-                        markers[i].infowindow = infowindow;
-                        google.maps.event.addListener(markers[i], 'click', function() {
+                        self.markers[i].infowindow = infowindow;
+                        google.maps.event.addListener(self.markers[i], 'click', function() {
                                                       this.infowindow.close();
                                                       });
                     }
@@ -389,7 +386,7 @@ function MapDataModel(title)
     // of the markers within the calculated distance. This will display the route
     // on the map.
     function displayDirections(origin) {
-        hideMarkers(markers);
+        hideMarkers(self.markers);
         var directionsService = new google.maps.DirectionsService;
         // Get the destination address from the user entered value.
         var destinationAddress =
@@ -541,17 +538,17 @@ function MapDataModel(title)
     self.showListings = function showListings() {
         var bounds = new google.maps.LatLngBounds();
         // Extend the boundaries of the map for each marker and display the marker
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(map);
-            bounds.extend(markers[i].position);
+        for (var i = 0; i < self.markers.length; i++) {
+            self.markers[i].setMap(map);
+            bounds.extend(self.markers[i].position);
         }
         map.fitBounds(bounds);
     }
     
     // This function will loop through the listings and hide them all.
     function hideListings() {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(null);
+        for (var i = 0; i < self.markers.length; i++) {
+            self.markers[i].setMap(null);
         }
     }
 }
@@ -653,7 +650,7 @@ function initMap() {
                                // If there is, get rid of it and remove the markers
                                if (polygon) {
                                polygon.setMap(null);
-                               hideMarkers(markers);
+                               hideMarkers(self.markers);
                                }
                                // Switching the drawing mode to the HAND (i.e., no longer drawing).
                                drawingManager.setDrawingMode(null);
