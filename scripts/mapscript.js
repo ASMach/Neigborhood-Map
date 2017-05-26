@@ -541,7 +541,7 @@ function MapDataModel(title)
     }
     
     // This function will loop through the listings and hide them all.
-    function hideListings() {
+    self.hideListings = function hideListings() {
         for (var i = 0; i < self.markers.length; i++) {
             self.markers[i].setMap(null);
         }
@@ -549,7 +549,8 @@ function MapDataModel(title)
 }
 
 // Apply Knockout bindings
-ko.applyBindings(new MapDataModel());
+mapView = { viewModel: new MapDataModel() };
+ko.applyBindings(mapView);
 
 // Initial map setup
 function initMap() {
@@ -612,7 +613,7 @@ function initMap() {
                                             id: i
                                             });
         // Push the marker to our array of markers.
-        markers.push(marker);
+        mapView.markers.push(marker);
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', function() {
                            populateInfoWindow(this, largeInfowindow);
