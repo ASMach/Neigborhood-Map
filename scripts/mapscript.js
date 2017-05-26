@@ -121,6 +121,9 @@ init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
 // Knockout data model for our map system
 function MapDataModel(title)
 {
+    // Create a new blank array for all the listing markers.
+    var markers = [];
+    
     // Get reference to self first
     var self = this;
     
@@ -200,7 +203,7 @@ function MapDataModel(title)
     }
     
     // This function will loop through the listings and hide them all.
-    function hideMarkers(markers) {
+    self.hideMarkers = function hideMarkers(markers) {
         for (var i = 0; i < markers.length; i++) {
             markers[i].setMap(null);
         }
@@ -222,7 +225,7 @@ function MapDataModel(title)
     
 
     // This shows and hides (respectively) the drawing options.
-    function toggleDrawing(drawingManager) {
+    self.toggleDrawing = function toggleDrawing(drawingManager) {
         if (drawingManager.map) {
             drawingManager.setMap(null);
             // In case the user drew anything, get rid of the polygon
@@ -297,7 +300,7 @@ function MapDataModel(title)
     // This function allows the user to input a desired travel time, in
     // minutes, and a travel mode, and a location - and only show the listings
     // that are within that travel time (via that travel mode) of the location
-    function searchWithinTime() {
+    self.searchWithinTime = function searchWithinTime() {
         // Initialize the distance matrix service.
         var distanceMatrixService = new google.maps.DistanceMatrixService;
         var address = document.getElementById('search-within-time-text').value;
@@ -535,7 +538,7 @@ function MapDataModel(title)
     }
     
     // This function will loop through the markers array and display them all.
-    function showListings() {
+    self.showListings = function showListings() {
         var bounds = new google.maps.LatLngBounds();
         // Extend the boundaries of the map for each marker and display the marker
         for (var i = 0; i < markers.length; i++) {
@@ -631,24 +634,6 @@ function initMap() {
                            this.setIcon(defaultIcon);
                            });
     }
-    document.getElementById('show-listings').addEventListener('click', showListings);
-    
-    document.getElementById('hide-listings').addEventListener('click', function() {
-                                                              hideMarkers(markers);
-                                                              });
-    
-    document.getElementById('toggle-drawing').addEventListener('click', function() {
-                                                               toggleDrawing(drawingManager);
-                                                               });
-    
-    document.getElementById('zoom-to-area').addEventListener('click', function() {
-                                                             zoomToArea();
-                                                             });
-     
-    
-    document.getElementById('search-within-time').addEventListener('click', function() {
-                                                                   searchWithinTime();
-                                                                   });
     
     // Listen for the event fired when the user selects a prediction from the
     // picklist and retrieve more details for that place.

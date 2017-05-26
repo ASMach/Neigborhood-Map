@@ -10,11 +10,11 @@
         <div class="options-box">
             <h1>Find Your New Cupertino Home</h1>
             <div>
-                <input id="show-listings" type="button" value="Show Listings">
-                <input id="hide-listings" type="button" value="Hide Listings">
+                <button id="show-listings" data-bind="click: showListings">Show Listings</button>
+                <button id="hide-listings" data-bind="click: hideMarkers">Hide Listings</button>
                 <hr>
                 <span class="text"> Draw a custom search area boundary!</span>
-                <input id="toggle-drawing"  type="button" value="Drawing Tools">
+                <button id="toggle-drawing" data-bind="click: toggleDrawing">Drawing Tools</button>
             </div>
             <hr>
             <div>
@@ -33,7 +33,7 @@
                 </select>
                 <span class="text">of</span>
                 <input id="search-within-time-text" type="text" placeholder="Ex: 1 Infinite Loop, Cupertino, CA">
-                <input id="search-within-time" type="button" value="Go">
+                <button id="search-within-time" data-bind="click: searchWithinTime">Go</button>
             </div>
             <hr>
             <div>
