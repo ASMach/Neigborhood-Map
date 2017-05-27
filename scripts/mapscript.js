@@ -218,14 +218,32 @@ function MapDataModel(title)
 
     // This shows and hides (respectively) the drawing options.
     self.toggleDrawing = function toggleDrawing(drawingManager) {
-        if (drawingManager.map) {
-            drawingManager.setMap(null);
-            // In case the user drew anything, get rid of the polygon
-            if (polygon !== null) {
-                polygon.setMap(null);
+        if (drawingManager !== null)
+        {
+            if (drawingManager.map)
+            {
+                self.drawingManager.setMap(null);
+                // In case the user drew anything, get rid of the polygon
+                if (polygon !== null)
+                {
+                    polygon.setMap(null);
+                }
             }
-        } else {
-            drawingManager.setMap(map);
+            else
+            {
+                if (map !== null)
+                {
+                    self.drawingManager.setMap(map);
+                }
+                else
+                {
+                    window.alert('Map has not been set!');
+                }
+            }
+        }
+        else
+        {
+            window.alert('No drawing manager for polygon!');
         }
     }
     
@@ -300,7 +318,7 @@ function MapDataModel(title)
         if (address == '') {
             window.alert('You must enter an address.');
         } else {
-            hideMarkers(self.markers);
+            self.hideMarkers(self.markers);
             // Use the distance matrix service to calculate the duration of the
             // routes between all our markers, and the destination address entered
             // by the user. Then put all the origins into an origin matrix.
@@ -422,23 +440,6 @@ function MapDataModel(title)
             createMarkersForPlaces(places);
         }
     }
-    
-
-    // This function firest when the user select "go" on the places search.
-    // It will do a nearby search using the entered query string or place.
-    function textSearchPlaces() {
-        var bounds = map.getBounds();
-        hideMarkers(self.placeMarkers);
-        var placesService = new google.maps.places.PlacesService(map);
-        placesService.textSearch({
-                                 query: document.getElementById('places-search').value,
-                                 bounds: bounds
-                                 }, function(results, status) {
-                                 if (status === google.maps.places.PlacesServiceStatus.OK) {
-                                 createMarkersForPlaces(results);
-                                 }
-                                 });
-    }
 
     
     // This function creates markers for each place found in either places search.
@@ -551,6 +552,9 @@ function MapDataModel(title)
 // Create a reference for our knockout view
 mapView = { viewModel: new MapDataModel() };
 
+// Initialize its markers
+mapView.markers = [];
+
 // Initial map setup
 function initMap() {
 
@@ -571,11 +575,6 @@ function initMap() {
     //var zoomAutocomplete = new google.maps.places.Autocomplete(document.getElementById('zoom-to-area-text'));
     // Bias the boundaries within the map for the zoom to area text.
     //zoomAutocomplete.bindTo('bounds', map);
-    // Create a searchbox in order to execute a places search
-    var searchBox = new google.maps.places.SearchBox(
-                                                     document.getElementById('places-search'));
-    // Bias the searchbox to within the bounds of the map.
-    searchBox.setBounds(map.getBounds());
     
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.
@@ -629,13 +628,7 @@ function initMap() {
                            this.setIcon(defaultIcon);
                            });
     }
-    
-    // Listen for the event fired when the user selects a prediction from the
-    // picklist and retrieve more details for that place.
-    searchBox.addListener('places_changed', function() {
-                          searchBoxPlaces(this);
-                          });
-    
+
     // Listen for the event fired when the user selects a prediction and clicks
     // "go" more details for that place.
     //document.getElementById('go-places').addEventListener('click', textSearchPlaces);
