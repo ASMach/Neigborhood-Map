@@ -548,9 +548,8 @@ function MapDataModel(title)
     }
 }
 
-// Apply Knockout bindings
+// Create a reference for our knockout view
 mapView = { viewModel: new MapDataModel() };
-ko.applyBindings(mapView);
 
 // Initial map setup
 function initMap() {
@@ -562,6 +561,9 @@ function initMap() {
                               styles: styles,
                               mapTypeControl: true
                               });
+    
+    // Apply Knockout bindings
+    ko.applyBindings(mapView.viewModel); // Unable to process binding
     
     // This autocomplete is for use in the search within time entry box.
     var timeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-within-time-text'));
