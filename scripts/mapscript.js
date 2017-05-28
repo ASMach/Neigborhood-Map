@@ -143,11 +143,11 @@ function MapDataModel(title)
     var polygon = null;
 
     // Create a new blank array for all the listing markers.
-    self.markers = ko.observableArray([]);
+    self.markers = ko.observableArray(locations);
     
     // Create placemarkers array to use in multiple functions to have control
     // over the number of places that show.
-    self.placeMarkers = ko.observableArray([]);
+    self.placeMarkers = ko.observableArray(locations);
     
     // Observable array operations
     self.addMarker = function(marker) {
