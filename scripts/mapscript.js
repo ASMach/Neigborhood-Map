@@ -141,6 +141,9 @@ function MapDataModel(title)
     
     // This global polygon variable is to ensure only ONE polygon is rendered.
     var polygon = null;
+    
+    // We need this drawing manager to be set later
+    var drawingManager = null;
 
     // Create a new blank array for all the listing markers.
     self.markers = ko.observableArray(locations);
@@ -224,9 +227,9 @@ function MapDataModel(title)
             {
                 self.drawingManager.setMap(null);
                 // In case the user drew anything, get rid of the polygon
-                if (polygon !== null)
+                if (self.polygon !== null)
                 {
-                    polygon.setMap(null);
+                    self.polygon.setMap(null);
                 }
             }
             else
@@ -243,7 +246,7 @@ function MapDataModel(title)
         }
         else
         {
-            window.alert('No drawing manager for polygon!');
+            window.alert('No drawing manager found!');
         }
     }
     
@@ -567,7 +570,7 @@ function initMap() {
                               });
     
     // Apply Knockout bindings
-    ko.applyBindings(mapView.viewModel); // Unable to process binding
+    ko.applyBindings(mapView.viewModel);
     
     // This autocomplete is for use in the search within time entry box.
     var timeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-within-time-text'));
@@ -582,7 +585,7 @@ function initMap() {
     var largeInfowindow = new google.maps.InfoWindow();
     
     // Initialize the drawing manager.
-    var drawingManager = new google.maps.drawing.DrawingManager({
+    mapView.drawingManager = new google.maps.drawing.DrawingManager({
                                                                 drawingMode: google.maps.drawing.OverlayType.POLYGON,
                                                                 drawingControl: true,
                                                                 drawingControlOptions: {
@@ -636,7 +639,7 @@ function initMap() {
     // Add an event listener so that the polygon is captured,  call the
     // searchWithinPolygon function. This will show the markers in the polygon,
     // and hide any outside of it.
-    drawingManager.addListener('overlaycomplete', function(event) {
+    mapView.drawingManager.addListener('overlaycomplete', function(event) {
                                // First, check if there is an existing polygon.
                                // If there is, get rid of it and remove the markers
                                if (polygon) {
