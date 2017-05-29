@@ -154,7 +154,7 @@ function MapDataModel(title)
     
     // Observable array operations
     self.addMarker = function(marker) {
-        self.markers.push(new marker);
+        self.markers.push(marker);
     }
     self.removeMarker = function(marker) { self.markers.remove(marker) }
     
