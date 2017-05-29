@@ -213,8 +213,8 @@ function MapDataModel(title)
     
     // This function will loop through the listings and hide them all.
     self.hideMarkers = function hideMarkers(markers) {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(null);
+        for (var i = 0; i < self.markers().length; i++) {
+            self.markers()[i].setMap(null);
         }
     }
     
@@ -254,11 +254,11 @@ function MapDataModel(title)
     // and shows only the ones within it. This is so that the
     // user can specify an exact area of search.
     function searchWithinPolygon() {
-        for (var i = 0; i < self.markers.length; i++) {
-            if (google.maps.geometry.poly.containsLocation(self.markers[i].position, polygon)) {
-                self.markers[i].setMap(map);
+        for (var i = 0; i < self.markers().length; i++) {
+            if (google.maps.geometry.poly.containsLocation(self.markers()[i].position, polygon)) {
+                self.markers()[i].setMap(map);
             } else {
-                self.markers[i].setMap(null);
+                self.markers()[i].setMap(null);
             }
         }
     }
@@ -321,13 +321,13 @@ function MapDataModel(title)
         if (address == '') {
             window.alert('You must enter an address.');
         } else {
-            self.hideMarkers(self.markers);
+            self.hideMarkers(self.markers());
             // Use the distance matrix service to calculate the duration of the
             // routes between all our markers, and the destination address entered
             // by the user. Then put all the origins into an origin matrix.
             var origins = [];
-            for (var i = 0; i < self.markers.length; i++) {
-                origins[i] = self.markers[i].position;
+            for (var i = 0; i < self.markers().length; i++) {
+                origins[i] = self.markers()[i].position;
             }
             var destination = address;
             var mode = document.getElementById('mode').value;
@@ -373,7 +373,7 @@ function MapDataModel(title)
                     var durationText = element.duration.text;
                     if (duration <= maxDuration) {
                         //the origin [i] should = the markers[i]
-                        self.markers[i].setMap(map);
+                        self.markers()[i].setMap(map);
                         atLeastOne = true;
                         // Create a mini infowindow to open immediately and contain the
                         // distance and duration
@@ -382,11 +382,11 @@ function MapDataModel(title)
                                                                     '<div><input type=\"button\" value=\"View Route\" onclick =' +
                                                                     '\"displayDirections(&quot;' + origins[i] + '&quot;);\"></input></div>'
                                                                     });
-                        infowindow.open(map, self.markers[i]);
+                        infowindow.open(map, self.markers()[i]);
                         // Put this in so that this small window closes if the user clicks
                         // the marker, when the big infowindow opens
-                        self.markers[i].infowindow = infowindow;
-                        google.maps.event.addListener(self.markers[i], 'click', function() {
+                        self.markers()[i].infowindow = infowindow;
+                        google.maps.event.addListener(self.markers()[i], 'click', function() {
                                                       this.infowindow.close();
                                                       });
                     }
@@ -402,7 +402,7 @@ function MapDataModel(title)
     // of the markers within the calculated distance. This will display the route
     // on the map.
     function displayDirections(origin) {
-        hideMarkers(self.markers);
+        hideMarkers(self.markers());
         var directionsService = new google.maps.DirectionsService;
         // Get the destination address from the user entered value.
         var destinationAddress =
@@ -434,7 +434,7 @@ function MapDataModel(title)
     // This function fires when the user selects a searchbox picklist item.
     // It will do a nearby search using the selected query string or place.
     function searchBoxPlaces(searchBox) {
-        hideMarkers(self.placeMarkers);
+        hideMarkers(self.placeMarkers());
         var places = searchBox.getPlaces();
         if (places.length == 0) {
             window.alert('We did not find any places matching that search!');
@@ -537,17 +537,17 @@ function MapDataModel(title)
     self.showListings = function showListings() {
         var bounds = new google.maps.LatLngBounds();
         // Extend the boundaries of the map for each marker and display the marker
-        for (var i = 0; i < self.markers.length; i++) {
-            self.markers[i].setMap(map);
-            bounds.extend(self.markers[i].position);
+        for (var i = 0; i < self.markers().length; i++) {
+            self.markers()[i].setMap(map);
+            bounds.extend(self.markers()[i].position);
         }
         map.fitBounds(bounds);
     }
     
     // This function will loop through the listings and hide them all.
     self.hideListings = function hideListings() {
-        for (var i = 0; i < self.markers.length; i++) {
-            self.markers[i].setMap(null);
+        for (var i = 0; i < self.markers().length; i++) {
+            self.markers()[i].setMap(null);
         }
     }
 }
@@ -644,7 +644,7 @@ function initMap() {
                                // If there is, get rid of it and remove the markers
                                if (polygon) {
                                polygon.setMap(null);
-                               hideMarkers(self.markers);
+                               hideMarkers(self.markers());
                                }
                                // Switching the drawing mode to the HAND (i.e., no longer drawing).
                                drawingManager.setDrawingMode(null);
