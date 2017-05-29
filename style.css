@@ -6,9 +6,10 @@ body {
     padding: 0;
 }
 
-.container {
-    height: 100%;
-    position: relative;
+.modal-dialog {
+    margin-top: 200px;
+    width: 640px;
+    height: 480px;
 }
 
 input {
@@ -36,9 +37,10 @@ hr {
 
 #map {
     bottom:0px;
+    top: 60px;
     height: 0;
     overflow: hidden;
-    padding-bottom: 50%; // Aspect ratio
+    padding-bottom: 75%; /* Aspect ratio */
     padding-top: 30px;
     position: relative;
     left: 0px;
@@ -97,4 +99,45 @@ hr {
     font-family: 'Roboto','sans-serif';
     line-height: 30px;
     padding-left: 10px;
+}
+
+.hide {
+    display:none;
+    pointer-events: none;
+}
+
+/* Menu bar */
+
+.menu-icon-container {
+    display: inline-block;
+    cursor: pointer;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.bar1, .bar2, .bar3 {
+    width: 35px;
+    height: 5px;
+    background-color: #fcfcfc;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+/* Rotate first bar */
+.change .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px) ;
+    transform: rotate(-45deg) translate(-9px, 6px) ;
+}
+
+/* Fade out the second bar */
+.change .bar2 {
+    opacity: 0;
+}
+
+/* Rotate last bar */
+.change .bar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px) ;
+    transform: rotate(45deg) translate(-8px, -8px) ;
 }

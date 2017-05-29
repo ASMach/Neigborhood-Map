@@ -1,0 +1,3 @@
+function animateMenu(x) {
+    x.classList.toggle("change"); // Animate the menu icon
+}

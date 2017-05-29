@@ -163,6 +163,17 @@ function MapDataModel(title)
     }
     self.removePlaceMarker = function(marker) { self.placeMarkers.remove(marker) }
     
+    // Menu visibility
+    
+    self.showMenu = ko.observable(false); // It's hidden by default
+    
+    self.toggleMenu = function() {
+        
+        self.showRow(!self.showRow());
+        alert('showRow is now ' + self.showRow());
+    };
+
+    
     // Google Maps drawing functions
     
     // This function populates the infowindow when the marker is clicked. We'll only allow

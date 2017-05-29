@@ -9,65 +9,87 @@
         <title>Neighborhood Map</title>
     </head>
     <body>
+        <!--Heading Bar-->
         <div class="container-fluid">
-            <div class="options-box">
-                <h1>Find Your New Cupertino Home</h1>
-                <div>
-                    <button id="show-listings" data-bind="click: showListings">Show Listings</button>
-                    <button id="hide-listings" data-bind="click: hideMarkers">Hide Listings</button>
-                    <hr>
-                    <span class="text"> Draw a custom search area boundary!</span>
-                    <button id="toggle-drawing" data-bind="click: toggleDrawing">Drawing Tools</button>
+            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <!--Menu bar-->
+                        <div class="menu-icon-container" onclick="animateMenu(this)" data-bind="click: toggleMenu">
+                            <div class="bar1"></div>
+                            <div class="bar2"></div>
+                            <div class="bar3"></div>
+                        </div>
+                    </div>
                 </div>
-            <hr>
-            <div>
-                <span class="text"> Within </span>
-                <select id="max-duration">
-                    <option value="10">10 min</option>
-                    <option value="15">15 min</option>
-                    <option value="30">30 min</option>
-                    <option value="60">1 hour</option>
-                </select>
-                <select id="mode">
-                    <option value="DRIVING">drive</option>
-                    <option value="WALKING">walk</option>
-                    <option value="BICYCLING">bike</option>
-                    <option value="TRANSIT">transit ride</option>
-                </select>
-                <span class="text">of</span>
-                <input id="search-within-time-text" type="text" placeholder="Ex: 1 Infinite Loop, Cupertino, CA">
-                <button id="search-within-time" data-bind="click: searchWithinTime">Go</button>
-            </div>
-            <hr>
-            <div>
-                <table>
-                    <thead><tr>
-                        <th>Address</th>
-                    </tr></thead>
-                    <tbody data-bind="foreach: markers">
-                        <tr>
-                            <td><span data-bind="text: title" /></td>
-                            <!--<td><button id="remove-marker" data-bind="click: $parent.removeMarker">Remove</button></td>-->
-                        </tr>    
-                    </tbody>
-                </table>
-            </div>
-            <div>
-                <span class="text"> Enter custom coordinates!</span>
-            </div>
-            <div>
-                <input data-bind="value: mapObj().lat" />
-                <input data-bind="value: mapObj().lng" />
             </div>
         </div>
+        <!--Options menu-->
+        <div class="modal" data-bind="visible: showMenu">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="options-box">
+                        <h1>Find Your New Cupertino Home</h1>
+                        <div>
+                            <button id="show-listings" data-bind="click: showListings">Show Listings</button>
+                            <button id="hide-listings" data-bind="click: hideMarkers">Hide Listings</button>
+                            <hr>
+                            <span class="text"> Draw a custom search area boundary!</span>
+                            <button id="toggle-drawing" data-bind="click: toggleDrawing">Drawing Tools</button>
+                        </div>
+                        <hr>
+                        <div>
+                            <span class="text"> Within </span>
+                            <select id="max-duration">
+                                <option value="10">10 min</option>
+                                <option value="15">15 min</option>
+                                <option value="30">30 min</option>
+                                <option value="60">1 hour</option>
+                            </select>
+                            <select id="mode">
+                                <option value="DRIVING">drive</option>
+                                <option value="WALKING">walk</option>
+                                <option value="BICYCLING">bike</option>
+                                <option value="TRANSIT">transit ride</option>
+                            </select>
+                            <span class="text">of</span>
+                            <input id="search-within-time-text" type="text" placeholder="Ex: 1 Infinite Loop, Cupertino, CA">
+                            <button id="search-within-time" data-bind="click: searchWithinTime">Go</button>
+                            </div>
+                        <hr>
+                        <div>
+                            <table>
+                                <thead><tr>
+                                    <th>Address</th>
+                                </tr></thead>
+                                <tbody data-bind="foreach: markers">
+                                    <tr>
+                                        <td><span data-bind="text: title" /></td>
+                                        <!--<td><button id="remove-marker" data-bind="click: $parent.removeMarker">Remove</button></td>-->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <span class="text"> Enter custom coordinates!</span>
+                        </div>
+                        <div>
+                            <input data-bind="value: mapObj().lat" />
+                            <input data-bind="value: mapObj().lng" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <!--Map-->
         <div class="container-fluid">
             <div id="map" data-bind="map:mapObj"></div>
-        <div class="container-fluid">
+        </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
         <script type='text/javascript' src='scripts/knockout-3.4.2.js'></script>
         <script src="scripts/mapscript.js"></script>
+        <script src="scripts/menu.js"></script>
         <script async defer
         src=
         "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAAYsARjJKdWD4t-Wxm-DMI0E9pWpBCoxI&v=3&callback=initMap">
