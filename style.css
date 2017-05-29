@@ -6,12 +6,6 @@ body {
     padding: 0;
 }
 
-.modal-dialog {
-    margin-top: 200px;
-    width: 640px;
-    height: 480px;
-}
-
 input {
     font-size: 12px;
 }
@@ -42,9 +36,10 @@ hr {
     overflow: hidden;
     padding-bottom: 75%; /* Aspect ratio */
     padding-top: 30px;
-    position: relative;
     left: 0px;
     right: 0px;
+    position: absolute;
+    z-index: 1;
 }
 
 .options-box {
@@ -56,6 +51,8 @@ hr {
     padding: 10px 10px 30px 10px;
     text-align: left;
     width: 280px;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
 }
 
 #pano {
@@ -104,6 +101,11 @@ hr {
 .hide {
     display:none;
     pointer-events: none;
+}
+
+.overlap {
+    position: relative;
+    z-index:2;
 }
 
 /* Menu bar */
