@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css" type="text/css"  />
+        <!-- Bootstrap 3 -->
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
         <title>Neighborhood Map</title>
     </head>
     <body>
@@ -56,10 +60,13 @@
                 <input data-bind="value: mapObj().lng" />
             </div>
         </div>
-        <div id="map" data-bind="style:{width:'100%',height:'100%'},map:mapObj"></div>
         </div>
-        <script type='text/javascript' src='scripts/knockout-3.4.2.js'></script>
+        <div class="container-fluid">
+            <div id="map" data-bind="map:mapObj"></div>
+        <div class="container-fluid">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+        <script type='text/javascript' src='scripts/knockout-3.4.2.js'></script>
         <script src="scripts/mapscript.js"></script>
         <script async defer
         src=

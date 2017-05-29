@@ -214,7 +214,7 @@ function MapDataModel(title)
     // This function will loop through the listings and hide them all.
     self.hideMarkers = function hideMarkers(markers) {
         for (var i = 0; i < self.markers().length; i++) {
-            self.markers()[i].setMap(null);
+            self.markers()[i].marker.setMap(null);
         }
     }
     
