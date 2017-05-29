@@ -146,11 +146,11 @@ function MapDataModel(title)
     var drawingManager = null;
 
     // Create a new blank array for all the listing markers.
-    self.markers = ko.observableArray(locations);
+    self.markers = ko.observableArray();
     
     // Create placemarkers array to use in multiple functions to have control
     // over the number of places that show.
-    self.placeMarkers = ko.observableArray(locations);
+    self.placeMarkers = ko.observableArray();
     
     // Observable array operations
     self.addMarker = function(marker) {
@@ -224,7 +224,7 @@ function MapDataModel(title)
     // This function will loop through the listings and hide them all.
     self.hideMarkers = function hideMarkers(markers) {
         for (var i = 0; i < self.markers().length; i++) {
-            self.markers()[i].marker.setMap(null);
+            self.markers()[i].setMap(null);
         }
     }
     
@@ -563,10 +563,10 @@ function MapDataModel(title)
 }
 
 // Create a reference for our knockout view
-mapView = { viewModel: new MapDataModel() };
+mapView = new MapDataModel();
 
 // Initialize its markers
-mapView.markers = [];
+//mapView.markers = [];
 
 // Initial map setup
 function initMap() {
@@ -580,7 +580,7 @@ function initMap() {
                               });
     
     // Apply Knockout bindings
-    ko.applyBindings(mapView.viewModel);
+    ko.applyBindings(mapView);
     
     // This autocomplete is for use in the search within time entry box.
     var timeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-within-time-text'));
@@ -627,7 +627,7 @@ function initMap() {
                                             id: i
                                             });
         // Push the marker to our array of markers.
-        mapView.markers.push(marker);
+        mapView.addMarker(marker);
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', function() {
                            populateInfoWindow(this, largeInfowindow);
