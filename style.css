@@ -55,7 +55,7 @@ hr {
     filter: alpha(opacity=50);
     position: fixed;
     z-index: 2;
-    height: 90%;
+    height: 100%;
     overflow: scroll;
 }
 
