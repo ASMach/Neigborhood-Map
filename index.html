@@ -25,60 +25,54 @@
             </div>
         </div>
         <!--Options menu-->
-        <div class="modal overlap" data-bind="visible: showMenu">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="options-box">
-                        <h1>Find Your New Cupertino Home</h1>
-                        <div>
-                            <button id="show-listings" data-bind="click: showListings">Show Listings</button>
-                            <button id="hide-listings" data-bind="click: hideMarkers">Hide Listings</button>
-                            <hr>
-                            <span class="text"> Draw a custom search area boundary!</span>
-                            <button id="toggle-drawing" data-bind="click: toggleDrawing">Drawing Tools</button>
-                        </div>
-                        <hr>
-                        <div>
-                            <span class="text"> Within </span>
-                            <select id="max-duration">
-                                <option value="10">10 min</option>
-                                <option value="15">15 min</option>
-                                <option value="30">30 min</option>
-                                <option value="60">1 hour</option>
-                            </select>
-                            <select id="mode">
-                                <option value="DRIVING">drive</option>
-                                <option value="WALKING">walk</option>
-                                <option value="BICYCLING">bike</option>
-                                <option value="TRANSIT">transit ride</option>
-                            </select>
-                            <span class="text">of</span>
-                            <input id="search-within-time-text" type="text" placeholder="Ex: 1 Infinite Loop, Cupertino, CA">
-                            <button id="search-within-time" data-bind="click: searchWithinTime">Go</button>
-                            </div>
-                        <hr>
-                        <div>
-                            <table>
-                                <thead><tr>
-                                    <th>Address</th>
-                                </tr></thead>
-                                <tbody data-bind="foreach: markers">
-                                    <tr>
-                                        <td><span data-bind="text: title" /></td>
-                                        <!--<td><button id="remove-marker" data-bind="click: $parent.removeMarker">Remove</button></td>-->
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div>
-                            <span class="text"> Enter custom coordinates!</span>
-                        </div>
-                        <div>
-                            <input data-bind="value: mapObj().lat" />
-                            <input data-bind="value: mapObj().lng" />
-                        </div>
-                    </div>
-                </div>
+        <div class="options-box overlap" data-bind="visible: showMenu">
+            <h3>Find Your New Cupertino Home</h3>
+            <div>
+                <button id="show-listings" data-bind="click: showListings">Show Listings</button>
+                <button id="hide-listings" data-bind="click: hideMarkers">Hide Listings</button>
+                <hr>
+                <span class="text"> Draw a custom search area boundary!</span>
+                <button id="toggle-drawing" data-bind="click: toggleDrawing">Drawing Tools</button>
+            </div>
+            <hr>
+            <div>
+                <span class="text"> Within </span>
+                <select id="max-duration">
+                    <option value="10">10 min</option>
+                    <option value="15">15 min</option>
+                    <option value="30">30 min</option>
+                    <option value="60">1 hour</option>
+                </select>
+                <select id="mode">
+                    <option value="DRIVING">drive</option>
+                    <option value="WALKING">walk</option>
+                    <option value="BICYCLING">bike</option>
+                    <option value="TRANSIT">transit ride</option>
+                </select>
+                <span class="text">of</span>
+                <input id="search-within-time-text" type="text" placeholder="Ex: 1 Infinite Loop, Cupertino, CA">
+                <button id="search-within-time" data-bind="click: searchWithinTime">Go</button>
+            </div>
+            <hr>
+            <div>
+                <table>
+                    <thead><tr>
+                        <th>Address</th>
+                    </tr></thead>
+                    <tbody data-bind="foreach: markers">
+                        <tr>
+                            <td><span data-bind="text: title" /></td>
+                            <!--<td><button id="remove-marker" data-bind="click: $parent.removeMarker">Remove</button></td>-->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <span class="text"> Enter custom coordinates!</span>
+            </div>
+            <div>
+                <input data-bind="value: mapObj().lat" />
+                <input data-bind="value: mapObj().lng" />
             </div>
         </div>
         <!--Map-->

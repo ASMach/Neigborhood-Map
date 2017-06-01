@@ -168,6 +168,7 @@ function MapDataModel(title)
     self.showMenu = ko.observable(false); // It's hidden by default
     
     self.toggleMenu = function() {
+        $(".modal").modal();
         self.showMenu(!self.showMenu());
         // alert('showRow is now ' + self.showMenu()); // Uncomment for test purposes
     };
