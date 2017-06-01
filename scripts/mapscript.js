@@ -215,19 +215,6 @@ function MapDataModel(title)
         }
     }
     
-    // This function hides all markers outside the polygon,
-    // and shows only the ones within it. This is so that the
-    // user can specify an exact area of search.
-    function searchWithinPolygon(polygon) {
-        for (var i = 0; i < self.markers().length; i++) {
-            if (google.maps.geometry.poly.containsLocation(self.markers()[i].position, polygon)) {
-                self.markers()[i].setMap(map);
-            } else {
-                self.markers()[i].setMap(null);
-            }
-        }
-    }
-    
     // This function allows the user to input a desired travel time, in
     // minutes, and a travel mode, and a location - and only show the listings
     // that are within that travel time (via that travel mode) of the location
@@ -521,6 +508,19 @@ function populateInfoWindow(marker, infowindow) {
     }
 }
 
+// This function hides all markers outside the polygon,
+// and shows only the ones within it. This is so that the
+// user can specify an exact area of search.
+function searchWithinPolygon() {
+    for (var i = 0; i < mapView.markers().length; i++) {
+        if (google.maps.geometry.poly.containsLocation(mapView.markers()[i].position, polygon)) {
+            mapView.markers()[i].setMap(map);
+        } else {
+            mapView.markers()[i].setMap(null);
+        }
+    }
+}
+
 // Initial map setup
 function initMap() {
 
@@ -615,7 +615,7 @@ function initMap() {
                                polygon = event.overlay;
                                polygon.setEditable(true);
                                // Searching within the polygon.
-                               mapView.searchWithinPolygon(polygon);
+                               searchWithinPolygon(polygon);
                                // Make sure the search is re-done if the poly is changed.
                                polygon.getPath().addListener('set_at', searchWithinPolygon);
                                polygon.getPath().addListener('insert_at', searchWithinPolygon);
