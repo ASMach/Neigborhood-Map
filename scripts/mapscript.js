@@ -175,55 +175,6 @@ function MapDataModel(title)
         self.showMenu(!self.showMenu());
         // alert('showRow is now ' + self.showMenu()); // Uncomment for test purposes
     };
-
-    
-    // Google Maps drawing functions
-    
-    // This function populates the infowindow when the marker is clicked. We'll only allow
-    // one infowindow which will open at the marker that is clicked, and populate based
-    // on that markers position.
-    function populateInfoWindow(marker, infowindow) {
-        // Check to make sure the infowindow is not already opened on this marker.
-        if (infowindow.marker != marker) {
-            // Clear the infowindow content to give the streetview time to load.
-            infowindow.setContent('');
-            infowindow.marker = marker;
-            // Make sure the marker property is cleared if the infowindow is closed.
-            infowindow.addListener('closeclick', function() {
-                                   infowindow.marker = null;
-                                   });
-            var streetViewService = new google.maps.StreetViewService();
-            var radius = 50;
-            // In case the status is OK, which means the pano was found, compute the
-            // position of the streetview image, then calculate the heading, then get a
-            // panorama from that and set the options
-            function getStreetView(data, status) {
-                if (status == google.maps.StreetViewStatus.OK) {
-                    var nearStreetViewLocation = data.location.latLng;
-                    var heading = google.maps.geometry.spherical.computeHeading(
-                                                                                nearStreetViewLocation, marker.position);
-                    infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
-                    var panoramaOptions = {
-                    position: nearStreetViewLocation,
-                    pov: {
-                    heading: heading,
-                    pitch: 30
-                    }
-                    };
-                    var panorama = new google.maps.StreetViewPanorama(
-                                                                      document.getElementById('pano'), panoramaOptions);
-                } else {
-                    infowindow.setContent('<div>' + marker.title + '</div>' +
-                                          '<div>No Street View Found</div>');
-                }
-            }
-            // Use streetview service to get the closest streetview image within
-            // 50 meters of the markers position
-            streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-            // Open the infowindow on the correct marker.
-            infowindow.open(map, marker);
-        }
-    }
     
     // This function will loop through the listings and hide them all.
     self.hideMarkers = function hideMarkers(markers) {
@@ -276,23 +227,6 @@ function MapDataModel(title)
             }
         }
     }
-
-    
-    // This geocodes an address
-    function geocodeAddress(geocoder, resultsMap) {
-        var address = document.getElementById('address').value;
-        geocoder.geocode({'address': address}, function(results, status) {
-                         if (status === google.maps.GeocoderStatus.OK) {
-                         resultsMap.setCenter(results[0].geometry.location);
-                         //TODO: Insert code here to take the first result's formatted address, and LOCATION.
-                         document.getElementById('firstComponent').innerHTML="The Formatted Address is:" + results[0].formatted_address; // PUT STUFF HERE
-                         document.getElementById('secondComponent').innerHTML="The Location is" + results[0].geometry.location; // PUT STUFF HERE
-                         } else {
-                         alert('Geocode was not successful for the following reason: ' + status);
-                         }
-                         });
-    }
-    
     
     // This function takes the input value in the find nearby area text input
     // locates it, and then zooms into that area. This is so that the user can
@@ -569,8 +503,53 @@ function MapDataModel(title)
 // Create a reference for our knockout view
 mapView = new MapDataModel();
 
-// Initialize its markers
-//mapView.markers = [];
+// Google Maps drawing functions
+
+// This function populates the infowindow when the marker is clicked. We'll only allow
+// one infowindow which will open at the marker that is clicked, and populate based
+// on that markers position.
+function populateInfoWindow(marker, infowindow) {
+    // Check to make sure the infowindow is not already opened on this marker.
+    if (infowindow.marker != marker) {
+        // Clear the infowindow content to give the streetview time to load.
+        infowindow.setContent('');
+        infowindow.marker = marker;
+        // Make sure the marker property is cleared if the infowindow is closed.
+        infowindow.addListener('closeclick', function() {
+                               infowindow.marker = null;
+                               });
+        var streetViewService = new google.maps.StreetViewService();
+        var radius = 50;
+        // In case the status is OK, which means the pano was found, compute the
+        // position of the streetview image, then calculate the heading, then get a
+        // panorama from that and set the options
+        function getStreetView(data, status) {
+            if (status == google.maps.StreetViewStatus.OK) {
+                var nearStreetViewLocation = data.location.latLng;
+                var heading = google.maps.geometry.spherical.computeHeading(
+                                                                            nearStreetViewLocation, marker.position);
+                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+                var panoramaOptions = {
+                position: nearStreetViewLocation,
+                pov: {
+                heading: heading,
+                pitch: 30
+                }
+                };
+                var panorama = new google.maps.StreetViewPanorama(
+                                                                  document.getElementById('pano'), panoramaOptions);
+            } else {
+                infowindow.setContent('<div>' + marker.title + '</div>' +
+                                      '<div>No Street View Found</div>');
+            }
+        }
+        // Use streetview service to get the closest streetview image within
+        // 50 meters of the markers position
+        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+        // Open the infowindow on the correct marker.
+        infowindow.open(map, marker);
+    }
+}
 
 // Initial map setup
 function initMap() {
@@ -634,7 +613,7 @@ function initMap() {
         mapView.addMarker(marker);
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', function() {
-                           mapView.populateInfoWindow(this, largeInfowindow);
+                           populateInfoWindow(this, largeInfowindow);
                            });
         // Two event listeners - one for mouseover, one for mouseout,
         // to change the colors back and forth.
