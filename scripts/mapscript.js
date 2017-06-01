@@ -107,6 +107,9 @@ init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
     
     mapObj.googleMap = new google.maps.Map(element, mapOptions);
     
+    // We need a reference to mapObj.googleMap for convenience
+    map = mapObj.googleMap;
+    
     $("#" + element.getAttribute("id")).data("mapObj",mapObj);
 }
 };
@@ -631,7 +634,7 @@ function initMap() {
         mapView.addMarker(marker);
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', function() {
-                           populateInfoWindow(this, largeInfowindow);
+                           mapView.populateInfoWindow(this, largeInfowindow);
                            });
         // Two event listeners - one for mouseover, one for mouseout,
         // to change the colors back and forth.
@@ -658,12 +661,12 @@ function initMap() {
                                hideMarkers(self.markers());
                                }
                                // Switching the drawing mode to the HAND (i.e., no longer drawing).
-                               drawingManager.setDrawingMode(null);
+                               mapView.drawingManager.setDrawingMode(null);
                                // Creating a new editable polygon from the overlay.
                                polygon = event.overlay;
                                polygon.setEditable(true);
                                // Searching within the polygon.
-                               searchWithinPolygon(polygon);
+                               mapView.searchWithinPolygon(polygon);
                                // Make sure the search is re-done if the poly is changed.
                                polygon.getPath().addListener('set_at', searchWithinPolygon);
                                polygon.getPath().addListener('insert_at', searchWithinPolygon);

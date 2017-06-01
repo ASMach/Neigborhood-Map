@@ -15,7 +15,7 @@
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <!--Menu bar-->
-                        <div class="menu-icon-container" onclick="animateMenu(this)" data-bind="click: toggleMenu">
+                        <div class="menu-icon-container" onclick="animateMenuButton(this)" data-bind="click: toggleMenu">
                             <div class="bar1"></div>
                             <div class="bar2"></div>
                             <div class="bar3"></div>
@@ -29,7 +29,7 @@
             <h3>Find Your New Cupertino Home</h3>
             <div>
                 <button id="show-listings" data-bind="click: showListings">Show Listings</button>
-                <button id="hide-listings" data-bind="click: hideMarkers">Hide Listings</button>
+                <button id="hide-listings" data-bind="click: hideListings">Hide Listings</button>
                 <hr>
                 <span class="text"> Draw a custom search area boundary!</span>
                 <button id="toggle-drawing" data-bind="click: toggleDrawing">Drawing Tools</button>
@@ -68,12 +68,15 @@
                     </tbody>
                 </table>
             </div>
+            <hr>
             <div>
                 <span class="text"> Enter custom coordinates!</span>
             </div>
             <div>
                 <input data-bind="value: mapObj().lat" />
                 <input data-bind="value: mapObj().lng" />
+                <br />
+                <br />
             </div>
         </div>
         <!--Map-->
