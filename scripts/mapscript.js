@@ -500,7 +500,7 @@ function populateInfoWindow(marker, infowindow) {
         // Get zillow information first
         var zillowDiv;
         
-        // Get JSON for the marker's location from Zillow
+        // Get XML for the marker's location from Zillow
         var zillowURL = 'http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1fu8vullzpn_9od0r&address=' + marker.title.split(' ').join('+') + '&citystatezip=Cupertino%2C+CA';
         
         encodedurl = encodeURIComponent(zillowURL);
@@ -509,7 +509,7 @@ function populateInfoWindow(marker, infowindow) {
         
         $.ajax({
                type: "GET",
-               url: "http://www.yohman.com/proxy/proxy_xml?url=" + encodedurl,
+               url: "proxy.php?url=" + encodedurl,
                dataType: "xml",
                success: function (xml) {
                result = '<div>' + '$' + $(xml).find("amount").text() + '</div>';
