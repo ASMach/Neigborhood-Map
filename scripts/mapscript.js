@@ -477,6 +477,25 @@ function populateInfoWindow(marker, infowindow) {
                                });
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;
+        // Get zillow information first
+        var zillowDiv;
+        
+        // Get JSON for the marker's location from Zillow
+        var zillowURL = 'http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1fu8vullzpn_9od0r&address=' + marker.title.split(' ').join('+') + '&citystatezip=Cupertino%2C+CA';
+        $.ajax({
+               type: "GET",
+               url: zillowURL,
+               dataType: "xml",
+               success: function (xml) {
+               result = '<div>' + '$' + $(xml).find("amount").text() + '</div>';
+               zillowDiv = '<div>Estimated Market Value (Zillow)</div>' + result;
+               },
+               error: function (xml) {
+               window.alert('Error was: ' + xml.status + ' ' + xml.statusText);
+               }
+               });
+        
+        
         // In case the status is OK, which means the pano was found, compute the
         // position of the streetview image, then calculate the heading, then get a
         // panorama from that and set the options
@@ -485,7 +504,7 @@ function populateInfoWindow(marker, infowindow) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
                                                                             nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + zillowDiv);
                 var panoramaOptions = {
                 position: nearStreetViewLocation,
                 pov: {
@@ -497,7 +516,7 @@ function populateInfoWindow(marker, infowindow) {
                                                                   document.getElementById('pano'), panoramaOptions);
             } else {
                 infowindow.setContent('<div>' + marker.title + '</div>' +
-                                      '<div>No Street View Found</div>');
+                                      '<div>No Street View Found</div>' + zillowDiv);
             }
         }
         // Use streetview service to get the closest streetview image within
