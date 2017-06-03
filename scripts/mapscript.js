@@ -477,23 +477,63 @@ function populateInfoWindow(marker, infowindow) {
                                });
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;
+        
+        // Prepare CORS for Zillow
+        // https://www.html5rocks.com/en/tutorials/cors/
+        
+        function createCORSRequest(method, url) {
+            var xhr = new XMLHttpRequest();
+            if ("withCredentials" in xhr) {
+                // XHR for Chrome/Firefox/Opera/Safari.
+                xhr.open(method, url, true);
+            } else if (typeof XDomainRequest != "undefined") {
+                // XDomainRequest for IE.
+                xhr = new XDomainRequest();
+                xhr.open(method, url);
+            } else {
+                // CORS not supported.
+                xhr = null;
+            }
+            return xhr;
+        }
+        
         // Get zillow information first
         var zillowDiv;
         
         // Get JSON for the marker's location from Zillow
         var zillowURL = 'http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1fu8vullzpn_9od0r&address=' + marker.title.split(' ').join('+') + '&citystatezip=Cupertino%2C+CA';
-        $.ajax({
-               type: "GET",
-               url: zillowURL,
-               dataType: "xml",
-               success: function (xml) {
-               result = '<div>' + 'Estimated Market Value: $' + $(xml).find("amount").text() + '</div>';
-               zillowDiv = '<div><a href="http://www.zillow.com"><img src="https://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" height="50" width="200" alt="Zillow Real Estate Search"/></a></div>' + result;
-               },
-               error: function (xml) {
-               window.alert('Error was: ' + xml.status + ' ' + xml.statusText);
-               }
-               });
+        
+        var xhr = createCORSRequest('GET', zillowURL);
+        if (!xhr) {
+            window.alert('CORS not supported');
+            return;
+        }
+        else // Only set the request header if we have a CORS request, and it's already opened if the constructed returned one
+        {
+            xhr.setRequestHeader( 'Access-Control-Allow-Origin', '*');
+        }
+        
+        // Helper method for getting the estimated price
+        function getZestimate(text) {
+            return text.match('<ammount>(.*)?</ammount>')[1];
+        }
+        
+        // Response handlers.
+        xhr.onload = function() {
+            var text = xhr.responseText;
+            var zestimate = getZestimate(text);
+            
+            result = '<div>' + 'Estimated Market Value: $' + zestimate + '</div>';
+            zillowDiv = '<div><a href="http://www.zillow.com"><img src="https://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" height="50" width="200" alt="Zillow Real Estate Search"/></a></div>' + result;
+            
+            window.alert('Response from CORS request to ' + zillowURL + ': ' + zestimate);
+        };
+        
+        xhr.onerror = function() {
+            window.alert('Error making CORS request.');
+        };
+        
+        xhr.send();
         
         
         // In case the status is OK, which means the pano was found, compute the
