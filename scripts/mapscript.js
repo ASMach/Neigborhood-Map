@@ -503,38 +503,23 @@ function populateInfoWindow(marker, infowindow) {
         // Get JSON for the marker's location from Zillow
         var zillowURL = 'http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1fu8vullzpn_9od0r&address=' + marker.title.split(' ').join('+') + '&citystatezip=Cupertino%2C+CA';
         
-        var xhr = createCORSRequest('GET', zillowURL);
-        if (!xhr) {
-            window.alert('CORS not supported');
-            return;
-        }
-        else // Only set the request header if we have a CORS request, and it's already opened if the constructed returned one
-        {
-            xhr.setRequestHeader( 'Access-Control-Allow-Origin', '*');
-        }
+        encodedurl = encodeURIComponent(zillowURL);
         
-        // Helper method for getting the estimated price
-        function getZestimate(text) {
-            return text.match('<ammount>(.*)?</ammount>')[1];
-        }
+        // We are passing the Zillow URL through a third-party proxy server as per a tutorial at http://gis.yohman.com/up206b/tutorials/4-2-zillow-web-setting-up-a-proxy/
         
-        // Response handlers.
-        xhr.onload = function() {
-            var text = xhr.responseText;
-            var zestimate = getZestimate(text);
-            
-            result = '<div>' + 'Estimated Market Value: $' + zestimate + '</div>';
-            zillowDiv = '<div><a href="http://www.zillow.com"><img src="https://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" height="50" width="200" alt="Zillow Real Estate Search"/></a></div>' + result;
-            
-            window.alert('Response from CORS request to ' + zillowURL + ': ' + zestimate);
-        };
-        
-        xhr.onerror = function() {
-            window.alert('Error making CORS request.');
-        };
-        
-        xhr.send();
-        
+        $.ajax({
+               type: "GET",
+               url: "http://www.yohman.com/proxy/proxy_xml?url=" + encodedurl,
+               dataType: "xml",
+               success: function (xml) {
+               result = '<div>' + '$' + $(xml).find("amount").text() + '</div>';
+               zillowDiv = '<div>Estimated Market Value (Zillow)</div>' + result;
+               },
+               error: function (xml) {
+               window.alert('Error was: ' + xml.status + ' ' + xml.statusText);
+               zillowDiv = '<div>Cannot access Zillow API</div>';
+               }
+               });
         
         // In case the status is OK, which means the pano was found, compute the
         // position of the streetview image, then calculate the heading, then get a
