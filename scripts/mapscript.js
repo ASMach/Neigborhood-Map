@@ -477,6 +477,7 @@ function populateInfoWindow(marker, infowindow) {
                                });
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;
+        
         // Get zillow information first
         var zillowDiv;
         
