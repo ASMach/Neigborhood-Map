@@ -477,7 +477,6 @@ function populateInfoWindow(marker, infowindow) {
                                });
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;
-        
         // Get zillow information first
         var zillowDiv;
         
@@ -488,8 +487,8 @@ function populateInfoWindow(marker, infowindow) {
                url: zillowURL,
                dataType: "xml",
                success: function (xml) {
-               result = '<div>' + '$' + $(xml).find("amount").text() + '</div>';
-               zillowDiv = '<div>Estimated Market Value (Zillow)</div>' + result;
+               result = '<div>' + 'Estimated Market Value: $' + $(xml).find("amount").text() + '</div>';
+               zillowDiv = '<div><a href="http://www.zillow.com"><img src="https://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" height="50" width="200" alt="Zillow Real Estate Search"/></a></div>' + result;
                },
                error: function (xml) {
                window.alert('Error was: ' + xml.status + ' ' + xml.statusText);
