@@ -501,7 +501,7 @@ function populateInfoWindow(marker, infowindow) {
         
         var walkabilityDiv;
         
-        walkabilityURL = 'http://api.walkscore.com/score?format=xml&address=' + marker.title.split(' ').join('%20') + '%20Cupertino%20CA%95014' + '&lat=' + marker.getPosition().lat() + '&lon=' + marker.getPosition().lng() + '&transit=1&bike=1&wsapikey=2dec8712bf40d6202544462a8f334836';
+        walkabilityURL = 'http://api.walkscore.com/score?format=json&address=' + marker.title.split(' ').join('%20') + '%20Cupertino%20CA%95014' + '&lat=' + marker.getPosition().lat() + '&lon=' + marker.getPosition().lng() + '&transit=1&bike=1&wsapikey=2dec8712bf40d6202544462a8f334836';
         
         $.ajax({
                type: "GET",
