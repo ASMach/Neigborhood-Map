@@ -245,7 +245,7 @@ function MapDataModel(title)
                                                     unitSystem: google.maps.UnitSystem.IMPERIAL,
                                                     }, function(response, status) {
                                                     if (status !== google.maps.DistanceMatrixStatus.OK) {
-                                                    window.alert('Error was: ' + status);
+                                                    window.alert('Distance matrix error was: ' + status);
                                                     } else {
                                                     displayMarkersWithinTime(response);
                                                     }
@@ -497,7 +497,28 @@ function populateInfoWindow(marker, infowindow) {
             return xhr;
         }
         
-        // Get zillow information first
+        // Get walkability data
+        
+        var walkabilityDiv;
+        
+        walkabilityURL = 'http://api.walkscore.com/score?format=xml&address=' + marker.title.split(' ').join('%20') + '%20Cupertino%20CA%95014' + '&lat=' + marker.getPosition().lat() + '&lon=' + marker.getPosition().lng() + '&transit=1&bike=1&wsapikey=2dec8712bf40d6202544462a8f334836';
+        
+        $.ajax({
+               type: "GET",
+               dataType: "josn",
+               url: walkabilityURL,
+               success: function (json) {
+               result = '<div>Walkcore: ' + json["walkscore"] + '</div>';
+               walkabilityDiv = '<div>Estimated Market Value (Zillow)</div>' + result;
+
+               },
+               error: function (json) {
+               window.alert('Walkscore error was: ' + json.status + ' ' + json.statusText + ' at ' + walkabilityURL);
+               walkabilityDiv = '<div>Cannot find walk score!</div>';
+               }
+               });
+        
+        // Get zillow information and store it here
         var zillowDiv;
         
         // Get XML for the marker's location from Zillow
@@ -516,7 +537,7 @@ function populateInfoWindow(marker, infowindow) {
                zillowDiv = '<div>Estimated Market Value (Zillow)</div>' + result;
                },
                error: function (xml) {
-               window.alert('Error was: ' + xml.status + ' ' + xml.statusText);
+               window.alert('Zillow error was: ' + xml.status + ' ' + xml.statusText);
                zillowDiv = '<div>Cannot access Zillow API</div>';
                }
                });
@@ -529,7 +550,7 @@ function populateInfoWindow(marker, infowindow) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
                                                                             nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + zillowDiv);
+                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + zillowDiv + walkabilityDiv);
                 var panoramaOptions = {
                 position: nearStreetViewLocation,
                 pov: {
@@ -541,7 +562,7 @@ function populateInfoWindow(marker, infowindow) {
                                                                   document.getElementById('pano'), panoramaOptions);
             } else {
                 infowindow.setContent('<div>' + marker.title + '</div>' +
-                                      '<div>No Street View Found</div>' + zillowDiv);
+                                      '<div>No Street View Found</div>' + zillowDiv + walkabilityDiv);
             }
         }
         // Use streetview service to get the closest streetview image within
