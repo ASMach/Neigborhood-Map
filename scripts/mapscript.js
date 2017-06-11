@@ -497,6 +497,7 @@ function populateInfoWindow(marker, infowindow) {
             return xhr;
         }
         
+        /*
         // Get walkability data
         
         var walkabilityDiv;
@@ -505,7 +506,7 @@ function populateInfoWindow(marker, infowindow) {
         
         $.ajax({
                type: "GET",
-               dataType: "josn",
+               dataType: "json",
                url: walkabilityURL,
                success: function (json) {
                result = '<div>Walkcore: ' + json["walkscore"] + '</div>';
@@ -515,6 +516,38 @@ function populateInfoWindow(marker, infowindow) {
                error: function (json) {
                window.alert('Walkscore error was: ' + json.status + ' ' + json.statusText + ' at ' + walkabilityURL);
                walkabilityDiv = '<div>Cannot find walk score!</div>';
+               }
+               });
+        */
+        
+        // Foursquare setup
+        
+        var foursqareDiv;
+        
+        var apiURL = 'https://api.foursquare.com/v2/venues/search/z';
+        var foursquareClientID = 'PTVTCDT10DK4VAWWNNLCPVFQPFJQ3DQVKNASSAVFNJSR0JFH'
+        var foursquareSecret ='11Z1QM04KPUZTF1CZVSS0Z4SRZNFDFYOBI2G0BY3RKYKG4WM';
+        var foursquareVersion = '20170112';
+        
+        var foursquareLocation = marker.getPosition().lat() + ',' + marker.getPosition().lng();
+        
+        //venueFoursquareID; // TODO: Get this from the coordinates
+        
+        var foursquareURL = apiURL + foursquareLocation + '?client_id=' + foursquareClientID +  '&client_secret=' + foursquareSecret +'&v=' + foursquareVersion;
+        
+        
+        $.ajax({
+               type: "GET",
+               url: foursquareURL,
+               dataType: "json",
+               success: function (data) {
+               console.log(data);
+               result = '<div>' + '$' + $(xml).find("amount").text() + '</div>';
+               foursqareDiv = '<div>Foursquare Info</div>' + result;
+               },
+               error: function (data) {
+               window.alert('FourSquare error was: ' + data.status + ' ' + data.statusText);
+               foursqareDiv = '<div>Cannot access FourSquare API</div>';
                }
                });
         
@@ -550,7 +583,7 @@ function populateInfoWindow(marker, infowindow) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
                                                                             nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + zillowDiv + walkabilityDiv);
+                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + zillowDiv + yelpDiv);
                 var panoramaOptions = {
                 position: nearStreetViewLocation,
                 pov: {
@@ -562,7 +595,7 @@ function populateInfoWindow(marker, infowindow) {
                                                                   document.getElementById('pano'), panoramaOptions);
             } else {
                 infowindow.setContent('<div>' + marker.title + '</div>' +
-                                      '<div>No Street View Found</div>' + zillowDiv + walkabilityDiv);
+                                      '<div>No Street View Found</div>' + zillowDiv + yelpDiv);
             }
         }
         // Use streetview service to get the closest streetview image within
