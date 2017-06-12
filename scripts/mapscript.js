@@ -520,7 +520,7 @@ function populateInfoWindow(marker, infowindow) {
                });
         */
         
-        /*
+
         // Foursquare setup
         
         var foursqareDiv;
@@ -551,7 +551,7 @@ function populateInfoWindow(marker, infowindow) {
                foursqareDiv = '<div>Cannot access FourSquare API</div>';
                }
                });
-        */
+
         
         // Get zillow information and store it here
         var zillowDiv;
@@ -585,7 +585,7 @@ function populateInfoWindow(marker, infowindow) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
                                                                             nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + zillowDiv);
+                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + zillowDiv + foursqareDiv);
                 var panoramaOptions = {
                 position: nearStreetViewLocation,
                 pov: {
@@ -597,7 +597,7 @@ function populateInfoWindow(marker, infowindow) {
                                                                   document.getElementById('pano'), panoramaOptions);
             } else {
                 infowindow.setContent('<div>' + marker.title + '</div>' +
-                                      '<div>No Street View Found</div>' + zillowDiv);
+                                      '<div>No Street View Found</div>' + zillowDiv + foursqareDiv);
             }
         }
         // Use streetview service to get the closest streetview image within
