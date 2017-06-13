@@ -1,4 +1,4 @@
-var map;
+var map; // We need this outside the Knockout model
 
 // This global polygon variable is to ensure only ONE polygon is rendered.
 var polygon = null;
