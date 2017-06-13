@@ -543,8 +543,19 @@ function populateInfoWindow(marker, infowindow) {
                dataType: "json",
                success: function (data) {
                console.log(data);
-               result = '<div>' + '$' + $(data).find("amount").text() + '</div>';
-               foursqareDiv = '<div>Foursquare Info</div>' + result;
+               
+               // Parse our response data and then extract the venues for iteration
+               
+               var venues = data.response.venues;
+               
+               foursqareDiv = '<div>Nearby Foursquare venues (' + venues.length + '): </div>';
+               
+               for (venue in venues)
+               {
+                    var name = venue.name;
+               
+                    if (name != null) foursqareDiv = foursqareDiv + '<div>' + name + '</div>';
+               }
                },
                error: function (data) {
                window.alert('FourSquare error was: ' + data.status + ' ' + data.statusText);
@@ -553,6 +564,7 @@ function populateInfoWindow(marker, infowindow) {
                });
 
         
+        /*
         // Get zillow information and store it here
         var zillowDiv;
         
@@ -576,6 +588,7 @@ function populateInfoWindow(marker, infowindow) {
                zillowDiv = '<div>Cannot access Zillow API <a href=' + zillowURL + '>Raw Request</a></div>';
                }
                });
+        */
         
         // In case the status is OK, which means the pano was found, compute the
         // position of the streetview image, then calculate the heading, then get a
@@ -585,7 +598,7 @@ function populateInfoWindow(marker, infowindow) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
                                                                             nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + zillowDiv + foursqareDiv);
+                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + foursqareDiv);
                 var panoramaOptions = {
                 position: nearStreetViewLocation,
                 pov: {
@@ -597,7 +610,7 @@ function populateInfoWindow(marker, infowindow) {
                                                                   document.getElementById('pano'), panoramaOptions);
             } else {
                 infowindow.setContent('<div>' + marker.title + '</div>' +
-                                      '<div>No Street View Found</div>' + zillowDiv + foursqareDiv);
+                                      '<div>No Street View Found</div>' + foursqareDiv);
             }
         }
         // Use streetview service to get the closest streetview image within
