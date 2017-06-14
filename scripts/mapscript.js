@@ -657,6 +657,22 @@ function searchWithinPolygon() {
 // Initial map setup
 function initMap() {
 
+    
+    function populateInfoWindowListener()
+    {
+        populateInfoWindow(this, largeInfowindow);
+    }
+    
+    function mouseoverListener()
+    {
+        this.setIcon(highlightedIcon);
+    }
+    
+    function mouseoutListener()
+    {
+        this.setIcon(defaultIcon);
+    }
+    
     // Constructor creates a new map centered on Cupertino, CA.
     map = new google.maps.Map(document.getElementById('map'), {
                               center: {lat: 37.3230, lng: -122.0322},
@@ -716,17 +732,11 @@ function initMap() {
         mapView.addMarker(marker);
         
         // Create an onclick event to open the large infowindow at each marker.
-        marker.addListener('click', function() {
-                           populateInfoWindow(this, largeInfowindow);
-                           });
+        marker.addListener('click', populateInfoWindowListener);
         // Two event listeners - one for mouseover, one for mouseout,
         // to change the colors back and forth.
-        marker.addListener('mouseover', function() {
-                           this.setIcon(highlightedIcon);
-                           });
-        marker.addListener('mouseout', function() {
-                           this.setIcon(defaultIcon);
-                           });
+        marker.addListener('mouseover', mouseoverListener);
+        marker.addListener('mouseout', mouseoutListener);
 
     }
 
