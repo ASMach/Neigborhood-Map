@@ -158,13 +158,17 @@ function MapDataModel(title)
     // Observable array operations
     self.addMarker = function(marker) {
         self.markers.push(marker);
-    }
-    self.removeMarker = function(marker) { self.markers.remove(marker) }
+    };
+    self.removeMarker = function(marker) {
+        self.markers.remove(marker);
+    };
     
     self.addPlaceMarker = function(marker) {
-        self.placeMarkers.push(new marker);
-    }
-    self.removePlaceMarker = function(marker) { self.placeMarkers.remove(marker) }
+        self.placeMarkers.push(new marker());
+    };
+    self.removePlaceMarker = function(marker) {
+        self.placeMarkers.remove(marker);
+    };
     
     // Menu visibility
     
@@ -181,7 +185,7 @@ function MapDataModel(title)
         for (var i = 0; i < self.markers().length; i++) {
             self.markers()[i].setMap(null);
         }
-    }
+    };
     
 
     // This shows and hides (respectively) the drawing options.
@@ -213,17 +217,17 @@ function MapDataModel(title)
         {
             window.alert('No drawing manager found!');
         }
-    }
+    };
     
     // This function allows the user to input a desired travel time, in
     // minutes, and a travel mode, and a location - and only show the listings
     // that are within that travel time (via that travel mode) of the location
     self.searchWithinTime = function searchWithinTime() {
         // Initialize the distance matrix service.
-        var distanceMatrixService = new google.maps.DistanceMatrixService;
+        var distanceMatrixService = new google.maps.DistanceMatrixService();
         var address = document.getElementById('search-within-time-text').value;
         // Check to make sure the place entered isn't blank.
-        if (address == '') {
+        if (address === '') {
             window.alert('You must enter an address.');
         } else {
             self.hideMarkers(self.markers());
@@ -251,7 +255,7 @@ function MapDataModel(title)
                                                     }
                                                     });
         }
-    }
+    };
     
     // This function will go through each of the results, and,
     // if the distance is LESS than the value in the picker, show it on the map.
@@ -308,7 +312,7 @@ function MapDataModel(title)
     // on the map.
     function displayDirections(origin) {
         hideMarkers(self.markers());
-        var directionsService = new google.maps.DirectionsService;
+        var directionsService = new google.maps.DirectionsService();
         // Get the destination address from the user entered value.
         var destinationAddress =
         document.getElementById('search-within-time-text').value;
@@ -341,11 +345,21 @@ function MapDataModel(title)
     function searchBoxPlaces(searchBox) {
         hideMarkers(self.placeMarkers());
         var places = searchBox.getPlaces();
-        if (places.length == 0) {
+        if (places.length === 0) {
             window.alert('We did not find any places matching that search!');
         } else {
             // For each place, get the icon, name and location.
             createMarkersForPlaces(places);
+        }
+    }
+    
+    // This handles clicks on a marker
+    
+    function infoWindowClickListener() {
+        if (placeInfoWindow.marker == this) {
+            console.log("This infowindow already is on this marker!");
+        } else {
+            getPlacesDetails(this, placeInfoWindow);
         }
     }
 
@@ -374,13 +388,7 @@ function MapDataModel(title)
             // so that only one is open at once.
             var placeInfoWindow = new google.maps.InfoWindow();
             // If a marker is clicked, do a place details search on it in the next function.
-            marker.addListener('click', function() {
-                               if (placeInfoWindow.marker == this) {
-                               console.log("This infowindow already is on this marker!");
-                               } else {
-                               getPlacesDetails(this, placeInfoWindow);
-                               }
-                               });
+            marker.addListener('click', infoWindowClickListener());
             addPlaceMarkers(marker);
             if (place.geometry.viewport) {
                 // Only geocodes have viewport.
@@ -447,14 +455,14 @@ function MapDataModel(title)
             bounds.extend(self.markers()[i].position);
         }
         map.fitBounds(bounds);
-    }
+    };
     
     // This function will loop through the listings and hide them all.
     self.hideListings = function hideListings() {
         for (var i = 0; i < self.markers().length; i++) {
             self.markers()[i].setMap(null);
         }
-    }
+    };
 }
 
 // Create a reference for our knockout view
@@ -466,6 +474,52 @@ mapView = new MapDataModel();
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
 function populateInfoWindow(marker, infowindow) {
+    
+    /*
+    // Prepare CORS for Zillow
+    // https://www.html5rocks.com/en/tutorials/cors/
+    
+    function createCORSRequest(method, url) {
+        var xhr = new XMLHttpRequest();
+        if ("withCredentials" in xhr) {
+            // XHR for Chrome/Firefox/Opera/Safari.
+            xhr.open(method, url, true);
+        } else if (typeof XDomainRequest != "undefined") {
+            // XDomainRequest for IE.
+            xhr = new XDomainRequest();
+            xhr.open(method, url);
+        } else {
+            // CORS not supported.
+            xhr = null;
+        }
+        return xhr;
+    }
+    */
+    
+    // In case the status is OK, which means the pano was found, compute the
+    // position of the streetview image, then calculate the heading, then get a
+    // panorama from that and set the options
+    function getStreetView(data, status) {
+        if (status == google.maps.StreetViewStatus.OK) {
+            var nearStreetViewLocation = data.location.latLng;
+            var heading = google.maps.geometry.spherical.computeHeading(
+                                                                        nearStreetViewLocation, marker.position);
+            infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + foursqareDiv);
+            var panoramaOptions = {
+            position: nearStreetViewLocation,
+            pov: {
+            heading: heading,
+            pitch: 30
+            }
+            };
+            var panorama = new google.maps.StreetViewPanorama(
+                                                              document.getElementById('pano'), panoramaOptions);
+        } else {
+            infowindow.setContent('<div>' + marker.title + '</div>' +
+                                  '<div>No Street View Found</div>' + foursqareDiv);
+        }
+    }
+    
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
         // Clear the infowindow content to give the streetview time to load.
@@ -477,25 +531,6 @@ function populateInfoWindow(marker, infowindow) {
                                });
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;
-        
-        // Prepare CORS for Zillow
-        // https://www.html5rocks.com/en/tutorials/cors/
-        
-        function createCORSRequest(method, url) {
-            var xhr = new XMLHttpRequest();
-            if ("withCredentials" in xhr) {
-                // XHR for Chrome/Firefox/Opera/Safari.
-                xhr.open(method, url, true);
-            } else if (typeof XDomainRequest != "undefined") {
-                // XDomainRequest for IE.
-                xhr = new XDomainRequest();
-                xhr.open(method, url);
-            } else {
-                // CORS not supported.
-                xhr = null;
-            }
-            return xhr;
-        }
         
         // Walkscore has been commented out for technical reasons, but it is useful for a real estate app
         
@@ -550,36 +585,12 @@ function populateInfoWindow(marker, infowindow) {
                });
         */
         
-        // In case the status is OK, which means the pano was found, compute the
-        // position of the streetview image, then calculate the heading, then get a
-        // panorama from that and set the options
-        function getStreetView(data, status) {
-            if (status == google.maps.StreetViewStatus.OK) {
-                var nearStreetViewLocation = data.location.latLng;
-                var heading = google.maps.geometry.spherical.computeHeading(
-                                                                            nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>' + foursqareDiv);
-                var panoramaOptions = {
-                position: nearStreetViewLocation,
-                pov: {
-                heading: heading,
-                pitch: 30
-                }
-                };
-                var panorama = new google.maps.StreetViewPanorama(
-                                                                  document.getElementById('pano'), panoramaOptions);
-            } else {
-                infowindow.setContent('<div>' + marker.title + '</div>' +
-                                      '<div>No Street View Found</div>' + foursqareDiv);
-            }
-        }
-        
         // Foursquare setup
         
         var foursqareDiv;
         
         var apiURL = 'https://api.foursquare.com/v2/venues/search?ll=';
-        var foursquareClientID = 'PTVTCDT10DK4VAWWNNLCPVFQPFJQ3DQVKNASSAVFNJSR0JFH'
+        var foursquareClientID = 'PTVTCDT10DK4VAWWNNLCPVFQPFJQ3DQVKNASSAVFNJSR0JFH';
         var foursquareSecret ='11Z1QM04KPUZTF1CZVSS0Z4SRZNFDFYOBI2G0BY3RKYKG4WM';
         var foursquareVersion = '20170112';
         
@@ -607,7 +618,7 @@ function populateInfoWindow(marker, infowindow) {
                               
                     // We don't want to append a blank space!
                             
-                    if (name != null && name.includes("School")) foursqareDiv = foursqareDiv + '<div>' + name + '</div>';
+                    if (name !== null && name.includes("School")) foursqareDiv = foursqareDiv + '<div>' + name + '</div>';
 
                 });
                
@@ -703,6 +714,7 @@ function initMap() {
                                             });
         // Push the marker to our array of markers.
         mapView.addMarker(marker);
+        
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', function() {
                            populateInfoWindow(this, largeInfowindow);
@@ -715,6 +727,7 @@ function initMap() {
         marker.addListener('mouseout', function() {
                            this.setIcon(defaultIcon);
                            });
+
     }
 
     // Listen for the event fired when the user selects a prediction and clicks
