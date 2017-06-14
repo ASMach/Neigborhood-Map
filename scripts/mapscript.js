@@ -3,115 +3,60 @@ var map; // We need this outside the Knockout model
 // This global polygon variable is to ensure only ONE polygon is rendered.
 var polygon = null;
 
-// TODO: Move these locations into an external MySQL database
-var locations = [
-                 {title: '6045 Shadygrove Drive', location: {lat: 37.314316, lng: -122.008423}},
-                 {title: '10798 Stokes Avenue', location: {lat: 37.33107589999999, lng: -122.05861119999997}},
-                 {title: '22293 McClellan Road', location: {lat: 37.314686, lng: -122.06510760000003}},
-                 {title: '21491 Columbus Ave', location: {lat: 37.308121, lng: -122.05015400000002}},
-                 {title: '10686 Johansen Drive', location: {lat: 37.3129266, lng: -122.0066923}}
-                 ];
+// Load locations from external JSON
 
+var locations = (function () {
+                 var json = null;
+                 $.ajax({
+                        'async': false,
+                        'global': false,
+                        'url': 'locations.json',
+                        'dataType': "json",
+                        'success': function (data) {
+                        json = data;
+                        }
+                        });
+                 return json;
+                 })();
 
-// Create a styles array to use with the map.
-var styles = [
-              {
-              featureType: 'water',
-              stylers: [
-                        { color: '#19a0d8' }
-                        ]
-              },{
-              featureType: 'administrative',
-              elementType: 'labels.text.stroke',
-              stylers: [
-                        { color: '#ffffff' },
-                        { weight: 6 }
-                        ]
-              },{
-              featureType: 'administrative',
-              elementType: 'labels.text.fill',
-              stylers: [
-                        { color: '#ef3131' }
-                        ]
-              },{
-              featureType: 'road.highway',
-              elementType: 'geometry.stroke',
-              stylers: [
-                        { color: '#efe9e4' },
-                        { lightness: -40 }
-                        ]
-              },{
-              featureType: 'transit.station',
-              stylers: [
-                        { weight: 9 },
-                        { hue: '#019a93' }
-                        ]
-              },{
-              featureType: 'road.highway',
-              elementType: 'labels.icon',
-              stylers: [
-                        { visibility: 'off' }
-                        ]
-              },{
-              featureType: 'water',
-              elementType: 'labels.text.stroke',
-              stylers: [
-                        { lightness: 100 }
-                        ]
-              },{
-              featureType: 'water',
-              elementType: 'labels.text.fill',
-              stylers: [
-                        { lightness: -100 }
-                        ]
-              },{
-              featureType: 'poi',
-              elementType: 'geometry',
-              stylers: [
-                        { visibility: 'on' },
-                        { color: '#f0e4d3' }
-                        ]
-              },{
-              featureType: 'road.highway',
-              elementType: 'labels.icon',
-              stylers: [
-                        { hue: -31 },
-                        { saturation: -40 },
-                        { lightness: 2.8 },
-                        { visibility: 'on' }
-                        ]
-              },{
-              featureType: 'road.highway',
-              elementType: 'geometry.fill',
-              stylers: [
-                        { color: '#ef3131' },
-                        { lightness: -25 }
-                        ]
-              }
-              ];
+// Load style data from external JSON
 
+var styles = (function () {
+              var json = null;
+              $.ajax({
+                     'async': false,
+                     'global': false,
+                     'url': 'mapstyle.json',
+                     'dataType': "json",
+                     'success': function (data) {
+                     json = data;
+                     }
+                     });
+              return json;
+              })();
 
 // Add map to Knockout
 
 ko.bindingHandlers.map = {
     
-init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-    var mapObj = ko.utils.unwrapObservable(valueAccessor());
-    var latLng = new google.maps.LatLng(
+    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+        var mapObj = ko.utils.unwrapObservable(valueAccessor());
+        var latLng = new google.maps.LatLng(
                                         ko.utils.unwrapObservable(mapObj.lat),
                                         ko.utils.unwrapObservable(mapObj.lng));
-    var mapOptions = { center: latLng,
-    zoom: 13,
-    styles: styles,
-        mapTypeControl: true};
+        var mapOptions = { center: latLng,
+            zoom: 13,
+            styles: styles,
+            mapTypeControl: true
+        };
     
-    mapObj.googleMap = new google.maps.Map(element, mapOptions);
+        mapObj.googleMap = new google.maps.Map(element, mapOptions);
     
-    // We need a reference to mapObj.googleMap for convenience
-    map = mapObj.googleMap;
+        // We need a reference to mapObj.googleMap for convenience
+        map = mapObj.googleMap;
     
-    $("#" + element.getAttribute("id")).data("mapObj",mapObj);
-}
+        $("#" + element.getAttribute("id")).data("mapObj",mapObj);
+    }
 };
 
 // Helper functions
@@ -177,7 +122,6 @@ function MapDataModel(title)
     self.toggleMenu = function() {
         $(".modal").modal();
         self.showMenu(!self.showMenu());
-        // alert('showRow is now ' + self.showMenu()); // Uncomment for test purposes
     };
     
     // This function will loop through the listings and hide them all.
@@ -475,27 +419,6 @@ mapView = new MapDataModel();
 // on that markers position.
 function populateInfoWindow(marker, infowindow) {
     
-    /*
-    // Prepare CORS for Zillow
-    // https://www.html5rocks.com/en/tutorials/cors/
-    
-    function createCORSRequest(method, url) {
-        var xhr = new XMLHttpRequest();
-        if ("withCredentials" in xhr) {
-            // XHR for Chrome/Firefox/Opera/Safari.
-            xhr.open(method, url, true);
-        } else if (typeof XDomainRequest != "undefined") {
-            // XDomainRequest for IE.
-            xhr = new XDomainRequest();
-            xhr.open(method, url);
-        } else {
-            // CORS not supported.
-            xhr = null;
-        }
-        return xhr;
-    }
-    */
-    
     // In case the status is OK, which means the pano was found, compute the
     // position of the streetview image, then calculate the heading, then get a
     // panorama from that and set the options
@@ -508,9 +431,9 @@ function populateInfoWindow(marker, infowindow) {
             var panoramaOptions = {
             position: nearStreetViewLocation,
             pov: {
-            heading: heading,
-            pitch: 30
-            }
+                    heading: heading,
+                    pitch: 30
+                }
             };
             var panorama = new google.maps.StreetViewPanorama(
                                                               document.getElementById('pano'), panoramaOptions);
@@ -531,59 +454,6 @@ function populateInfoWindow(marker, infowindow) {
                                });
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;
-        
-        // Walkscore has been commented out for technical reasons, but it is useful for a real estate app
-        
-        /*
-        // Get walkability data
-        
-        var walkabilityDiv;
-        
-        walkabilityURL = 'http://api.walkscore.com/score?format=json&address=' + marker.title.split(' ').join('%20') + '%20Cupertino%20CA%95014' + '&lat=' + marker.getPosition().lat() + '&lon=' + marker.getPosition().lng() + '&transit=1&bike=1&wsapikey=2dec8712bf40d6202544462a8f334836';
-        
-        $.ajax({
-               type: "GET",
-               dataType: "json",
-               url: walkabilityURL,
-               success: function (json) {
-               result = '<div>Walkcore: ' + json["walkscore"] + '</div>';
-               walkabilityDiv = '<div>Estimated Market Value (Zillow)</div>' + result;
-
-               },
-               error: function (json) {
-               window.alert('Walkscore error was: ' + json.status + ' ' + json.statusText + ' at ' + walkabilityURL);
-               walkabilityDiv = '<div>Cannot find walk score!</div>';
-               }
-               });
-        */
-        
-        // Zillow has been commented out for technical reasons, but it is useful for a real estate app
-        
-        /*
-        // Get zillow information and store it here
-        var zillowDiv;
-        
-        // Get XML for the marker's location from Zillow
-        var zillowURL = 'http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1fu8vullzpn_9od0r&address=' + marker.title.split(' ').join('+') + '&citystatezip=Cupertino%2C+CA';
-        
-        encodedurl = encodeURIComponent(zillowURL);
-        
-        // We are passing the Zillow URL through a third-party proxy server as per a tutorial at http://gis.yohman.com/up206b/tutorials/4-2-zillow-web-setting-up-a-proxy/
-        
-        $.ajax({
-               type: "GET",
-               url: "proxy.php?url=" + encodedurl,
-               dataType: "xml",
-               success: function (xml) {
-               result = '<div>' + '$' + $(xml).find("amount").text() + '</div>';
-               zillowDiv = '<div>Estimated Market Value (Zillow)</div>' + result + '<a href=' + zillowURL + '>Raw Request</a>';
-               },
-               error: function (xml) {
-               window.alert('Zillow error was: ' + xml.status + ' ' + xml.statusText);
-               zillowDiv = '<div>Cannot access Zillow API <a href=' + zillowURL + '>Raw Request</a></div>';
-               }
-               });
-        */
         
         // Foursquare setup
         
@@ -698,14 +568,12 @@ function initMap() {
     
     // Initialize the drawing manager.
     mapView.drawingManager = new google.maps.drawing.DrawingManager({
-                                                                drawingMode: google.maps.drawing.OverlayType.POLYGON,
-                                                                drawingControl: true,
-                                                                drawingControlOptions: {
-                                                                position: google.maps.ControlPosition.TOP_RIGHT,
-                                                                drawingModes: [
-                                                                               google.maps.drawing.OverlayType.POLYGON
-                                                                               ]
-                                                                }
+                                                                    drawingMode: google.maps.drawing.OverlayType.POLYGON,
+                                                                    drawingControl: true,
+                                                                    drawingControlOptions: {
+                                                                        position: google.maps.ControlPosition.TOP_RIGHT,
+                                                                        drawingModes: [google.maps.drawing.OverlayType.POLYGON]
+                                                                    }
                                                                 });
     
     // Style the markers a bit. This will be our listing marker icon.
@@ -751,8 +619,8 @@ function initMap() {
                                // First, check if there is an existing polygon.
                                // If there is, get rid of it and remove the markers
                                if (polygon) {
-                               polygon.setMap(null);
-                               hideMarkers(self.markers());
+                                       polygon.setMap(null);
+                                       hideMarkers(self.markers());
                                }
                                // Switching the drawing mode to the HAND (i.e., no longer drawing).
                                mapView.drawingManager.setDrawingMode(null);
@@ -766,3 +634,9 @@ function initMap() {
                                polygon.getPath().addListener('insert_at', searchWithinPolygon);
                                });
 }
+
+// Map error handling
+
+function mapError() {
+    window.alert('Map cannot be found!');
+};

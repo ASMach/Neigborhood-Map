@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="style.css" type="text/css"  />
+        <link rel="stylesheet" href="style.css" type="text/css">
         <!-- Bootstrap 3 -->
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
@@ -77,8 +77,8 @@
             <div>
                 <input data-bind="value: mapObj().lat" />
                 <input data-bind="value: mapObj().lng" />
-                <br />
-                <br />
+                <br>
+                <br>
             </div>
         </div>
         <!--Map-->
@@ -92,7 +92,7 @@
         <script src="scripts/menu.js"></script>
         <script async defer
         src=
-        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAAYsARjJKdWD4t-Wxm-DMI0E9pWpBCoxI&v=3&callback=initMap">
+        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAAYsARjJKdWD4t-Wxm-DMI0E9pWpBCoxI&v=3&callback=initMap" async defer onerror="mapError()">
         </script>
     </body>
 </html>
