@@ -633,6 +633,9 @@ function initMap() {
                                polygon.getPath().addListener('set_at', searchWithinPolygon);
                                polygon.getPath().addListener('insert_at', searchWithinPolygon);
                                });
+    
+    // Show markers by default
+    mapView.showListings();
 }
 
 // Map error handling
