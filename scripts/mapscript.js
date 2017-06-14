@@ -520,49 +520,6 @@ function populateInfoWindow(marker, infowindow) {
                });
         */
         
-
-        // Foursquare setup
-        
-        var foursqareDiv;
-        
-        var apiURL = 'https://api.foursquare.com/v2/venues/search?ll=';
-        var foursquareClientID = 'PTVTCDT10DK4VAWWNNLCPVFQPFJQ3DQVKNASSAVFNJSR0JFH'
-        var foursquareSecret ='11Z1QM04KPUZTF1CZVSS0Z4SRZNFDFYOBI2G0BY3RKYKG4WM';
-        var foursquareVersion = '20170112';
-        
-        var foursquareLocation = marker.getPosition().lat() + ',' + marker.getPosition().lng();
-        
-        //venueFoursquareID; // TODO: Get this from the coordinates
-        
-        var foursquareURL = apiURL + foursquareLocation + '&client_id=' + foursquareClientID +  '&client_secret=' + foursquareSecret +'&v=' + foursquareVersion;
-        
-        
-        $.ajax({
-               type: "GET",
-               url: foursquareURL,
-               dataType: "json",
-               success: function (data) {
-               console.log(data);
-               
-               // Parse our response data and then extract the venues for iteration
-               
-               var venues = data.response.venues;
-               
-               foursqareDiv = '<div>Nearby Foursquare venues (' + venues.length + '): </div>';
-               
-               for (venue in venues)
-               {
-                    var name = venue.name;
-               
-                    if (name != null) foursqareDiv = foursqareDiv + '<div>' + name + '</div>';
-               }
-               },
-               error: function (data) {
-               window.alert('FourSquare error was: ' + data.status + ' ' + data.statusText);
-               foursqareDiv = '<div>Cannot access FourSquare API</div>';
-               }
-               });
-
         
         /*
         // Get zillow information and store it here
@@ -613,9 +570,56 @@ function populateInfoWindow(marker, infowindow) {
                                       '<div>No Street View Found</div>' + foursqareDiv);
             }
         }
-        // Use streetview service to get the closest streetview image within
-        // 50 meters of the markers position
-        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+        
+        // Foursquare setup
+        
+        var foursqareDiv;
+        
+        var apiURL = 'https://api.foursquare.com/v2/venues/search?ll=';
+        var foursquareClientID = 'PTVTCDT10DK4VAWWNNLCPVFQPFJQ3DQVKNASSAVFNJSR0JFH'
+        var foursquareSecret ='11Z1QM04KPUZTF1CZVSS0Z4SRZNFDFYOBI2G0BY3RKYKG4WM';
+        var foursquareVersion = '20170112';
+        
+        var foursquareLocation = marker.getPosition().lat() + ',' + marker.getPosition().lng();
+        
+        var foursquareURL = apiURL + foursquareLocation + '&client_id=' + foursquareClientID +  '&client_secret=' + foursquareSecret +'&v=' + foursquareVersion;
+        
+        
+        $.ajax({
+               type: "GET",
+               url: foursquareURL,
+               dataType: "json",
+               success: function (data) {
+               console.log(data);
+               
+               // Parse our response data and then extract the venues for iteration
+               
+               var venues = data.response.venues;
+               
+               foursqareDiv = '<div>Nearby Foursquare venues (' + venues.length + '): </div>';
+               
+               for (venue in venues)
+               {
+                    var name = venue.name;
+               
+                    // We don't want to append a blank space!
+               
+                    if (name != null) foursqareDiv = foursqareDiv + '<div>' + name + '</div>';
+               
+                    // Handle street view only after we have our FourSquare data
+               
+                    // Use streetview service to get the closest streetview image within
+                    // 50 meters of the markers position
+                    streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+               }
+               },
+               error: function (data) {
+               window.alert('FourSquare error was: ' + data.status + ' ' + data.statusText);
+               foursqareDiv = '<div>Cannot access FourSquare API</div>';
+               }
+               });
+
+        
         // Open the infowindow on the correct marker.
         infowindow.open(map, marker);
     }
