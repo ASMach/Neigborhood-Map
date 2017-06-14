@@ -497,6 +497,8 @@ function populateInfoWindow(marker, infowindow) {
             return xhr;
         }
         
+        // Walkscore has been commented out for technical reasons, but it is useful for a real estate app
+        
         /*
         // Get walkability data
         
@@ -520,6 +522,7 @@ function populateInfoWindow(marker, infowindow) {
                });
         */
         
+        // Zillow has been commented out for technical reasons, but it is useful for a real estate app
         
         /*
         // Get zillow information and store it here
@@ -596,22 +599,24 @@ function populateInfoWindow(marker, infowindow) {
                
                var venues = data.response.venues;
                
-               foursqareDiv = '<div>Nearby Foursquare venues (' + venues.length + '): </div>';
+               foursqareDiv = '<div>Nearby Schools:</div>';
                
-               for (venue in venues)
-               {
+               
+               venues.forEach(function(venue){
                     var name = venue.name;
-               
+                              
                     // We don't want to append a blank space!
+                            
+                    if (name != null && name.includes("School")) foursqareDiv = foursqareDiv + '<div>' + name + '</div>';
+
+                });
                
-                    if (name != null) foursqareDiv = foursqareDiv + '<div>' + name + '</div>';
+               // Handle street view only after we have our FourSquare data
                
-                    // Handle street view only after we have our FourSquare data
+               // Use streetview service to get the closest streetview image within
+               // 50 meters of the markers position
+               streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
                
-                    // Use streetview service to get the closest streetview image within
-                    // 50 meters of the markers position
-                    streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-               }
                },
                error: function (data) {
                window.alert('FourSquare error was: ' + data.status + ' ' + data.statusText);
