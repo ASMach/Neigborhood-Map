@@ -92,7 +92,7 @@ function MapDataModel(title)
     var drawingManager = null;
 
     // We are using Knockout filtering for our list of addresses
-    self.filterTerm = ko.observable()
+    self.filterTerm = ko.observable(' ')
     
     // Create a new blank array for all the listing markers.
     self.markers = ko.observableArray();
@@ -101,7 +101,7 @@ function MapDataModel(title)
     self.filteredMarkers = ko.dependentObservable(function() {
                                            var term = self.filterTerm();
                                            return term ? ko.utils.arrayFilter(self.markers(), function(markers) {
-                                                                              return markers.name().indexOf(term) > -1;
+                                                                              return markers.title.indexOf(term) > -1;
                                                                               }) : self.markers;
                                            }, self);
     

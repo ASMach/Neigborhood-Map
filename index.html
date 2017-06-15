@@ -64,11 +64,11 @@
                         <tr>
                             <th>
                                 <!--Filter field-->
-                                <input id="filter-field">
+                                <input id="filter-field" data-bind="value: filterTerm, valueUpdate: ['afterkeydown']">
                             </th>
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach: markers">
+                    <tbody data-bind="foreach: filteredMarkers">
                         <tr>
                             <td><span data-bind="text: title, click: $root.populateInfoWindow" class="interactive-text"/></td>
                         </tr>
