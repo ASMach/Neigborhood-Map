@@ -91,8 +91,19 @@ function MapDataModel(title)
     // We need this drawing manager to be set later
     var drawingManager = null;
 
+    // We are using Knockout filtering for our list of addresses
+    self.filterTerm = ko.observable()
+    
     // Create a new blank array for all the listing markers.
     self.markers = ko.observableArray();
+    
+    // We need a second array for filtering
+    self.filteredMarkers = ko.dependentObservable(function() {
+                                           var term = self.filterTerm();
+                                           return term ? ko.utils.arrayFilter(self.markers(), function(markers) {
+                                                                              return markers.name().indexOf(term) > -1;
+                                                                              }) : self.markers;
+                                           }, self);
     
     // Create placemarkers array to use in multiple functions to have control
     // over the number of places that show.
