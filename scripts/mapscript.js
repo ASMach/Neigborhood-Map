@@ -296,28 +296,15 @@ function MapDataModel(title)
         }
     }
     
-    function toggleBounce() {
-        if (marker.getAnimation() !== null) {
-            marker.setAnimation(null);
-            console.log("Stop bouncing!");
-        } else {
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-            console.log("Bouncy bouncy!");
-        }
-    }
-    
     // This handles clicks on a marker
     
     function infoWindowClickListener() {
-        toggleBounce();
-        
         if (placeInfoWindow.marker == this) {
             console.log("This infowindow already is on this marker!");
         } else {
             getPlacesDetails(this, placeInfoWindow);
         }
     }
-
     
     // This function creates markers for each place found in either places search.
     function createMarkersForPlaces(places) {
@@ -340,7 +327,8 @@ function MapDataModel(title)
                                                 id: place.place_id
                                                 });
             // If a marker is clicked, do a place details search on it in the next function.
-            marker.addListener('click', infoWindowClickListener());
+            marker.addListener('click', toggleBounce);
+            marker.addListener('click', infoWindowClickListener);
             // Create a single infowindow to be used with the place details information
             // so that only one is open at once.
             var placeInfoWindow = new google.maps.InfoWindow();
@@ -421,6 +409,18 @@ function MapDataModel(title)
 
 // Create a reference for our knockout view
 mapView = new MapDataModel();
+
+// Handle bounce animation when a marker is clicked
+
+function toggleBounce() {
+    if (this.getAnimation() !== null) {
+        this.setAnimation(null);
+        console.log("Stop bouncing!");
+    } else {
+        this.setAnimation(google.maps.Animation.BOUNCE);
+        console.log("Bouncy bouncy!");
+    }
+}
 
 // Google Maps drawing functions
 
