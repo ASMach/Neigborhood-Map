@@ -125,6 +125,16 @@ function MapDataModel(title)
         self.showMenu(!self.showMenu());
     };
     
+    // Drop down values
+    
+    self.durationValues = ["10", "15", "30", "60"];
+    
+    self.selectedDurationValue = ko.observable("10");
+    
+    self.modes = ["DRIVING", "WALKING", "BICYCLING", "TRANSIT"];
+    
+    self.selectedMode = ko.observable("");
+    
     // This function will loop through the listings and hide them all.
     self.hideMarkers = function hideMarkers(markers) {
         for (var i = 0; i < self.markers().length; i++) {
@@ -183,7 +193,7 @@ function MapDataModel(title)
                 origins[i] = self.markers()[i].position;
             }
             var destination = self.address;
-            var mode = document.getElementById('mode').value;
+            var mode = self.selectedMode;
             // Now that both the origins and destination are defined, get all the
             // info for the distances between them.
             distanceMatrixService.getDistanceMatrix({
@@ -204,7 +214,7 @@ function MapDataModel(title)
     // This function will go through each of the results, and,
     // if the distance is LESS than the value in the picker, show it on the map.
     function displayMarkersWithinTime(response) {
-        var maxDuration = document.getElementById('max-duration').value;
+        var maxDuration = self.selectedDurationValue;
         var origins = response.originAddresses;
         var destinations = response.destinationAddresses;
         // Parse through the results, and get the distance and duration of each.
@@ -260,7 +270,7 @@ function MapDataModel(title)
         // Get the destination address from the user entered value.
         var destinationAddress = self.address;
         // Get mode again from the user entered value.
-        var mode = document.getElementById('mode').value;
+        var mode = self.selectedMode;
         directionsService.route({
                                 // The origin is the passed in marker's position.
                                 origin: origin,
@@ -564,7 +574,7 @@ function initMap() {
     ko.applyBindings(mapView);
     
     // This autocomplete is for use in the search within time entry box.
-    var timeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-within-time-text'));
+    var timeAutocomplete = new google.maps.places.Autocomplete(mapView.address);
     
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.

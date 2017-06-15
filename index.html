@@ -37,13 +37,13 @@
             <hr>
             <div>
                 <span class="text"> Within </span>
-                <select id="max-duration">
+                <select id="max-duration" data-bind="options: durationValues, value: selectedDurationValue">
                     <option value="10">10 min</option>
                     <option value="15">15 min</option>
                     <option value="30">30 min</option>
                     <option value="60">1 hour</option>
                 </select>
-                <select id="mode">
+                <select id="mode" data-bind="options: modes, value: selectedMode">
                     <option value="DRIVING">drive</option>
                     <option value="WALKING">walk</option>
                     <option value="BICYCLING">bike</option>
