@@ -54,8 +54,6 @@ ko.bindingHandlers.map = {
     
         // We need a reference to mapObj.googleMap for convenience
         map = mapObj.googleMap;
-    
-        $("#" + element.getAttribute("id")).data("mapObj",mapObj);
     }
 };
 
@@ -115,6 +113,9 @@ function MapDataModel(title)
         self.placeMarkers.remove(marker);
     };
     
+    // Observable for address that we can search within a distance of
+    self.address = ko.observable('');
+    
     // Menu visibility
     
     self.showMenu = ko.observable(false); // It's hidden by default
@@ -169,9 +170,8 @@ function MapDataModel(title)
     self.searchWithinTime = function searchWithinTime() {
         // Initialize the distance matrix service.
         var distanceMatrixService = new google.maps.DistanceMatrixService();
-        var address = document.getElementById('search-within-time-text').value;
         // Check to make sure the place entered isn't blank.
-        if (address === '') {
+        if (self.address === '') {
             window.alert('You must enter an address.');
         } else {
             self.hideMarkers(self.markers());
@@ -182,7 +182,7 @@ function MapDataModel(title)
             for (var i = 0; i < self.markers().length; i++) {
                 origins[i] = self.markers()[i].position;
             }
-            var destination = address;
+            var destination = self.address;
             var mode = document.getElementById('mode').value;
             // Now that both the origins and destination are defined, get all the
             // info for the distances between them.
@@ -258,8 +258,7 @@ function MapDataModel(title)
         hideMarkers(self.markers());
         var directionsService = new google.maps.DirectionsService();
         // Get the destination address from the user entered value.
-        var destinationAddress =
-        document.getElementById('search-within-time-text').value;
+        var destinationAddress = self.address;
         // Get mode again from the user entered value.
         var mode = document.getElementById('mode').value;
         directionsService.route({
@@ -270,7 +269,7 @@ function MapDataModel(title)
                                 travelMode: google.maps.TravelMode[mode]
                                 }, function(response, status) {
                                 if (status === google.maps.DirectionsStatus.OK) {
-                                var directionsDisplay = new google.maps.DirectionsRenderer({
+                                    var directionsDisplay = new google.maps.DirectionsRenderer({
                                                                                            map: map,
                                                                                            directions: response,
                                                                                            draggable: true,
@@ -278,9 +277,9 @@ function MapDataModel(title)
                                                                                            strokeColor: 'green'
                                                                                            }
                                                                                            });
-                                } else {
-                                window.alert('Directions request failed due to ' + status);
-                                }
+                                    } else {
+                                        window.alert('Directions request failed due to ' + status);
+                                    }
                                 });
     }
     
@@ -294,6 +293,14 @@ function MapDataModel(title)
         } else {
             // For each place, get the icon, name and location.
             createMarkersForPlaces(places);
+        }
+    }
+    
+    function toggleBounce() {
+        if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
         }
     }
     
@@ -333,6 +340,7 @@ function MapDataModel(title)
             var placeInfoWindow = new google.maps.InfoWindow();
             // If a marker is clicked, do a place details search on it in the next function.
             marker.addListener('click', infoWindowClickListener());
+            marker.addListener('click', toggleBounce);
             addPlaceMarkers(marker);
             if (place.geometry.viewport) {
                 // Only geocodes have viewport.
@@ -350,43 +358,42 @@ function MapDataModel(title)
     function getPlacesDetails(marker, infowindow) {
         var service = new google.maps.places.PlacesService(map);
         service.getDetails({
-                           placeId: marker.id
+                            placeId: marker.id
                            }, function(place, status) {
-                           if (status === google.maps.places.PlacesServiceStatus.OK) {
-                           // Set the marker property on this infowindow so it isn't created again.
-                           infowindow.marker = marker;
-                           var innerHTML = '<div>';
-                           if (place.name) {
-                           innerHTML += '<strong>' + place.name + '</strong>';
-                           }
-                           if (place.formatted_address) {
-                           innerHTML += '<br>' + place.formatted_address;
-                           }
-                           if (place.formatted_phone_number) {
-                           innerHTML += '<br>' + place.formatted_phone_number;
-                           }
-                           if (place.opening_hours) {
-                           innerHTML += '<br><br><strong>Hours:</strong><br>' +
-                           place.opening_hours.weekday_text[0] + '<br>' +
-                           place.opening_hours.weekday_text[1] + '<br>' +
-                           place.opening_hours.weekday_text[2] + '<br>' +
-                           place.opening_hours.weekday_text[3] + '<br>' +
-                           place.opening_hours.weekday_text[4] + '<br>' +
-                           place.opening_hours.weekday_text[5] + '<br>' +
-                           place.opening_hours.weekday_text[6];
-                           }
-                           if (place.photos) {
-                           innerHTML += '<br><br><img src="' + place.photos[0].getUrl(
-                                                                                      {maxHeight: 100, maxWidth: 200}) + '">';
-                           }
-                           innerHTML += '</div>';
-                           infowindow.setContent(innerHTML);
-                           infowindow.open(map, marker);
-                           // Make sure the marker property is cleared if the infowindow is closed.
-                           infowindow.addListener('closeclick', function() {
-                                                  infowindow.marker = null;
+                            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                                // Set the marker property on this infowindow so it isn't created again.
+                                infowindow.marker = marker;
+                                var innerHTML = '<div>';
+                                if (place.name) {
+                                    innerHTML += '<strong>' + place.name + '</strong>';
+                                }
+                                if (place.formatted_address) {
+                                    innerHTML += '<br>' + place.formatted_address;
+                                }
+                                if (place.formatted_phone_number) {
+                                    innerHTML += '<br>' + place.formatted_phone_number;
+                                }
+                                if (place.opening_hours) {
+                                    innerHTML += '<br><br><strong>Hours:</strong><br>' +
+                                    place.opening_hours.weekday_text[0] + '<br>' +
+                                    place.opening_hours.weekday_text[1] + '<br>' +
+                                    place.opening_hours.weekday_text[2] + '<br>' +
+                                    place.opening_hours.weekday_text[3] + '<br>' +
+                                    place.opening_hours.weekday_text[4] + '<br>' +
+                                    place.opening_hours.weekday_text[5] + '<br>' +
+                                    place.opening_hours.weekday_text[6];
+                                }
+                                if (place.photos) {
+                                    innerHTML += '<br><br><img src="' + place.photos[0].getUrl({maxHeight: 100, maxWidth: 200}) + '">';
+                                }
+                                innerHTML += '</div>';
+                                infowindow.setContent(innerHTML);
+                                infowindow.open(map, marker);
+                                // Make sure the marker property is cleared if the infowindow is closed.
+                                infowindow.addListener('closeclick', function() {
+                                                       infowindow.marker = null;
                                                   });
-                           }
+                            }
                            });
     }
     
@@ -474,7 +481,6 @@ function populateInfoWindow(marker, infowindow) {
                url: foursquareURL,
                dataType: "json",
                success: function (data) {
-               console.log(data);
                
                // Parse our response data and then extract the venues for iteration
                
@@ -556,10 +562,6 @@ function initMap() {
     
     // This autocomplete is for use in the search within time entry box.
     var timeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-within-time-text'));
-    // This autocomplete is for use in the geocoder entry box.
-    //var zoomAutocomplete = new google.maps.places.Autocomplete(document.getElementById('zoom-to-area-text'));
-    // Bias the boundaries within the map for the zoom to area text.
-    //zoomAutocomplete.bindTo('bounds', map);
     
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.
@@ -607,10 +609,6 @@ function initMap() {
         marker.addListener('mouseout', mouseoutListener);
 
     }
-
-    // Listen for the event fired when the user selects a prediction and clicks
-    // "go" more details for that place.
-    //document.getElementById('go-places').addEventListener('click', textSearchPlaces);
     
     // Add an event listener so that the polygon is captured,  call the
     // searchWithinPolygon function. This will show the markers in the polygon,

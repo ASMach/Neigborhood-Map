@@ -97,7 +97,7 @@ hr {
     padding: 5px;
     border: 1px solid #999;
     text-align: center;
-    font-family: 'Roboto','sans-serif';
+    font-family: "Roboto","sans-serif";
     line-height: 30px;
     padding-left: 10px;
 }
@@ -123,7 +123,9 @@ hr {
     padding-right: 10px;
 }
 
-.bar1, .bar2, .bar3 {
+.bar1,
+.bar2,
+.bar3 {
     width: 35px;
     height: 5px;
     background-color: #fcfcfc;
