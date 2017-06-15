@@ -337,7 +337,7 @@ function MapDataModel(title)
                                                 id: place.place_id
                                                 });
             // If a marker is clicked, do a place details search on it in the next function.
-            marker.addListener('click', toggleBounce);
+            //marker.addListener('click', toggleBounce);
             marker.addListener('click', infoWindowClickListener);
             // Create a single infowindow to be used with the place details information
             // so that only one is open at once.
@@ -611,6 +611,7 @@ function initMap() {
                                             icon: defaultIcon,
                                             id: i
                                             });
+        marker.addListener('click', toggleBounce);
         // Push the marker to our array of markers.
         mapView.addMarker(marker);
         
