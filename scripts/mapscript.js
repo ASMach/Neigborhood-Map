@@ -573,7 +573,7 @@ function initMap() {
     ko.applyBindings(mapView);
     
     // This autocomplete is for use in the search within time entry box.
-    var timeAutocomplete = new google.maps.places.Autocomplete(mapView.address);
+    var timeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-within-time-text'));
     
     // These are the real estate listings that will be shown to the user.
     // Normally we'd have these in a database instead.
