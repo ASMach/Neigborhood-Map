@@ -556,6 +556,8 @@ function searchWithinPolygon() {
 // Initial map setup
 function initMap() {
 
+    // Apply Knockout bindings
+    ko.applyBindings(mapView);
     
     function populateInfoWindowListener()
     {
@@ -579,9 +581,6 @@ function initMap() {
                               styles: styles,
                               mapTypeControl: true
                               });
-    
-    // Apply Knockout bindings
-    ko.applyBindings(mapView);
     
     // This autocomplete is for use in the search within time entry box.
     var timeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-within-time-text'));
