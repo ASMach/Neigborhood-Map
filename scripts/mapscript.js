@@ -534,7 +534,8 @@ function toggleBounce() {
         this.setAnimation(null);
     } else {
         this.setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout(function(){ this.setAnimation(null); }, 750);
+        var self = this;
+        setTimeout(function(){ self.setAnimation(null); }, 750);
     }
 }
 
