@@ -425,10 +425,9 @@ mapView = new MapDataModel();
 function toggleBounce() {
     if (this.getAnimation() !== null) {
         this.setAnimation(null);
-        console.log("Stop bouncing!");
     } else {
         this.setAnimation(google.maps.Animation.BOUNCE);
-        console.log("Bouncy bouncy!");
+        setTimeout(function(){ this.setAnimation(null); }, 750);
     }
 }
 
