@@ -65,7 +65,7 @@
                         <tr>
                             <th>
                                 <!--Filter field-->
-                                <input id="filter-field" data-bind="value: filterTerm, valueUpdate: ['afterkeydown']">
+                                <input id="filter-field" data-bind="value: filterTerm, valueUpdate: ['afterkeydown'], event: { keyup: showListings }">
                             </th>
                         </tr>
                     </thead>
