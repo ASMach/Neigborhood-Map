@@ -104,7 +104,7 @@ function MapDataModel(title)
                                             if (term) {
                                                   // filter and return subset of matching locations
                                                   return ko.utils.arrayFilter(self.markers(), function(markers) {
-                                                                       return markers.title.indexOf(term) > -1;
+                                                                       return markers.title.toLowerCase().indexOf(term.toLowerCase()) > -1;
                                                                        });
                                             } else {
                                                   // return all locations
