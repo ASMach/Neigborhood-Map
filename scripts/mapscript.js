@@ -199,7 +199,7 @@ function MapDataModel(title)
         // Initialize the distance matrix service.
         var distanceMatrixService = new google.maps.DistanceMatrixService();
         // Check to make sure the place entered isn't blank.
-        if (self.address === '') {
+        if (self.address() === '') {
             window.alert('You must enter an address.');
         } else {
             self.hideMarkers(self.markers());
@@ -210,8 +210,8 @@ function MapDataModel(title)
             for (var i = 0; i < self.markers().length; i++) {
                 origins[i] = self.markers()[i].position;
             }
-            var destination = self.address;
-            var mode = self.selectedMode;
+            var destination = self.address();
+            var mode = self.selectedMode();
             // Now that both the origins and destination are defined, get all the
             // info for the distances between them.
             distanceMatrixService.getDistanceMatrix({
@@ -243,7 +243,7 @@ function MapDataModel(title)
     // This function will go through each of the results, and,
     // if the distance is LESS than the value in the picker, show it on the map.
     function displayMarkersWithinTime(response) {
-        var maxDuration = self.selectedDurationValue;
+        var maxDuration = self.selectedDurationValue();
         var origins = response.originAddresses;
         var destinations = response.destinationAddresses;
         // Parse through the results, and get the distance and duration of each.
@@ -297,9 +297,9 @@ function MapDataModel(title)
         hideMarkers(self.markers());
         var directionsService = new google.maps.DirectionsService();
         // Get the destination address from the user entered value.
-        var destinationAddress = self.address;
+        var destinationAddress = self.address();
         // Get mode again from the user entered value.
-        var mode = self.selectedMode;
+        var mode = self.selectedMode();
         directionsService.route({
                                 // The origin is the passed in marker's position.
                                 origin: origin,
