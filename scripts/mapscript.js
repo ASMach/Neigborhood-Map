@@ -3,6 +3,9 @@ var map; // We need this outside the Knockout model
 // This global polygon variable is to ensure only ONE polygon is rendered.
 var polygon = null;
 
+// Holds our info window so that we have a single reference to it.
+var largeInfowindow = null;
+
 // Load locations from external JSON
 
 var locations = (function () {
@@ -161,7 +164,7 @@ function MapDataModel(title)
     };
     
     self.activateMarker = function (marker) {
-        google.maps.event.trigger(map, self.populateInfoWindow(marker, new google.maps.InfoWindow()));
+        google.maps.event.trigger(map, self.populateInfoWindow(marker, largeInfowindow));
     }
     
 
@@ -608,10 +611,9 @@ function initMap() {
     // This autocomplete is for use in the search within time entry box.
     var timeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-within-time-text'));
     
-    // These are the real estate listings that will be shown to the user.
-    // Normally we'd have these in a database instead.
+    // Load our info window
     
-    var largeInfowindow = new google.maps.InfoWindow();
+    largeInfowindow = new google.maps.InfoWindow();
     
     // Initialize the drawing manager.
     mapView.drawingManager = new google.maps.drawing.DrawingManager({
