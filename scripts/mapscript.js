@@ -160,6 +160,10 @@ function MapDataModel(title)
         }
     };
     
+    self.activateMarker = function (marker) {
+        google.maps.event.trigger(map, self.populateInfoWindow(marker, new google.maps.InfoWindow()));
+    }
+    
 
     // This shows and hides (respectively) the drawing options.
     self.toggleDrawing = function toggleDrawing(drawingManager) {
