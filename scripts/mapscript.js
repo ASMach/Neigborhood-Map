@@ -207,8 +207,8 @@ function MapDataModel(title)
             // routes between all our markers, and the destination address entered
             // by the user. Then put all the origins into an origin matrix.
             var origins = [];
-            for (var i = 0; i < self.markers().length; i++) {
-                origins[i] = self.markers()[i].position;
+            for (var i = 0; i < self.filteredMarkers().length; i++) {
+                origins[i] = self.filteredMarkers()[i].position;
             }
             var destination = self.address();
             var mode = self.selectedMode();
