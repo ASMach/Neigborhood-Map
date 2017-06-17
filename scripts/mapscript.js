@@ -17,6 +17,9 @@ var locations = (function () {
                         'dataType': "json",
                         'success': function (data) {
                         json = data;
+                        },
+                        'error': function (data) {
+                        window.alert('Location error was: ' + data.status + ' ' + data.statusText);
                         }
                         });
                  return json;
@@ -33,6 +36,9 @@ var styles = (function () {
                      'dataType': "json",
                      'success': function (data) {
                      json = data;
+                     },
+                     'error': function (data) {
+                     window.alert('Location error was: ' + data.status + ' ' + data.statusText);
                      }
                      });
               return json;
@@ -101,7 +107,7 @@ function MapDataModel(title)
     self.markers = ko.observableArray();
     
     // We need a second array for filtering
-    self.filteredMarkers = ko.dependentObservable(function() {
+    self.filteredMarkers = ko.computed(function() {
                                            var term = self.filterTerm();
                                                   
                                             if (term) {
@@ -165,6 +171,11 @@ function MapDataModel(title)
     
     self.activateMarker = function (marker) {
         google.maps.event.trigger(map, self.populateInfoWindow(marker, largeInfowindow));
+        
+        // Bounce the marker when clicked
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function(){ marker.setAnimation(null); }, 700);
+
     }
     
 
@@ -560,7 +571,7 @@ function toggleBounce() {
     } else {
         this.setAnimation(google.maps.Animation.BOUNCE);
         var self = this;
-        setTimeout(function(){ self.setAnimation(null); }, 750);
+        setTimeout(function(){ self.setAnimation(null); }, 700);
     }
 }
 
