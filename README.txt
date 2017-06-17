@@ -1,1 +1,1 @@
-To run this project, open index.html in your preferred web browser (Chrome, Firefox, Safari, or Edge).
+To run this project, navigate to its directory in the command line and enter python simple_server.py to start a local server. You can then access the project by entering http://localhost:8080 in your preferred web browser.
