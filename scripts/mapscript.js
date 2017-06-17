@@ -121,6 +121,13 @@ function MapDataModel(title)
                                             }
                                            }, self);
     
+    // Turn listings on and off when we filter in order to show only relevant listings
+    
+    self.reprocessVisibleMarkers = function () {
+        self.hideListings();
+        self.showListings();
+    }
+    
     // Create placemarkers array to use in multiple functions to have control
     // over the number of places that show.
     self.placeMarkers = ko.observableArray();
