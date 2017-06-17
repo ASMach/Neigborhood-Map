@@ -101,7 +101,7 @@ function MapDataModel(title)
     var drawingManager = null;
 
     // We are using Knockout filtering for our list of addresses
-    self.filterTerm = ko.observable('')
+    self.filterTerm = ko.observable('');
     
     // Create a new blank array for all the listing markers.
     self.markers = ko.observableArray();
@@ -126,7 +126,7 @@ function MapDataModel(title)
     self.reprocessVisibleMarkers = function () {
         self.hideListings();
         self.showListings();
-    }
+    };
     
     // Create placemarkers array to use in multiple functions to have control
     // over the number of places that show.
@@ -182,8 +182,7 @@ function MapDataModel(title)
         // Bounce the marker when clicked
         marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function(){ marker.setAnimation(null); }, 700);
-
-    }
+    };
     
 
     // This shows and hides (respectively) the drawing options.
@@ -564,7 +563,7 @@ function MapDataModel(title)
             // Open the infowindow on the correct marker.
             infowindow.open(map, marker);
         }
-    }
+    };
 }
 
 // Create a reference for our knockout view
@@ -706,4 +705,4 @@ function initMap() {
 
 function mapError() {
     window.alert('Map cannot be found!');
-};
+}
